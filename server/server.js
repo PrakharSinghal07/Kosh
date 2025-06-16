@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./database/db.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
-
+import bookRouter from "./routers/book.router.js"
 import authRouter from "./routers/user.router.js";
 
 config({ path: "./config/config.env" });
@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/book", bookRouter)
 
 
 app.use(errorMiddleware);
