@@ -6,7 +6,7 @@ import { connectDB } from "./database/db.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import bookRouter from "./routers/book.router.js"
 import authRouter from "./routers/user.router.js";
-
+import borrowRouter from "./routers/borrow.router.js"
 config({ path: "./config/config.env" });
 
 const app = express();
@@ -26,7 +26,7 @@ connectDB();
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/book", bookRouter)
-
+app.use("/api/v1/borrow", borrowRouter)
 
 app.use(errorMiddleware);
 
