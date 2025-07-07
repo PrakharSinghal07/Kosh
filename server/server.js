@@ -10,6 +10,8 @@ import borrowRouter from "./routers/borrow.router.js";
 import userRouter from "./routers/user.router.js";
 import { v2 as cloudinary } from "cloudinary";
 import expressFileUpload from "express-fileupload";
+import { deleteUnverifiedUsers } from "./services/deleteUnverifiedUsers.js";
+import { notifyUsers } from "./services/notifyUsers.js";
 config({ path: "./config/config.env" });
 
 const app = express();
@@ -32,7 +34,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressFileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
 
-connectDB();
+connectDB().then(() => {
+  console.log("DATABASE CONNECTED SUCCESSFULLY");
+  deleteUnverifiedUsers();
+  notifyUsers();
+  app.listen(process.env.PORT, () => {
+    console.log(`Server started on PORT ${process.env.PORT}`);
+    console.log("Jatin" > 9);
+  });
+});
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/book", bookRouter);
@@ -40,7 +50,3 @@ app.use("/api/v1/borrow", borrowRouter);
 app.use("/api/v1/user", userRouter);
 
 app.use(errorMiddleware);
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server started on PORT ${process.env.PORT}`);
-});

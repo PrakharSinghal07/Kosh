@@ -1,6 +1,6 @@
 # Node modules
 node_modules/
-
+config/
 # Logs
 logs/
 *.log
@@ -44,3 +44,5 @@ coverage/
 *.bak
 *.orig
 *.rej
+
+

@@ -39,9 +39,9 @@ export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
     const verificationCode = await newUser.generateVerificationCode();
     await newUser.save();
     const sub = "Thank you for registering. Please use the following OTP to verify your email address. This code is valid for the next 15 minutes.";
-    const message = await sendVerificationCode(verificationCode, email, sub, next);
+    await sendVerificationCode(verificationCode, email, sub, next);
     res.status(200).json({
-      message,
+      message: "Verification code sent on email.",
     });
   } catch (err) {
     next(err);
