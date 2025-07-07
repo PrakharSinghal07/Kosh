@@ -5,7 +5,7 @@ import Navbar from "./components/layout/Navbar";
 const App = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <AppRoutes />
     </>
   );

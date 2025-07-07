@@ -1,0 +1,68 @@
+import { useContext, useState } from "react";
+import "./Register.css"; // Using separate CSS if needed
+import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+
+const VerifyOTP = () => {
+  const {registerData, setRefreshAuthContext} = useContext(AuthContext);
+  const [OTP, setOTP] = useState("");
+  const navigate = useNavigate();
+  const handleInputChange = (e) => {
+    setOTP(e.target.value)
+    console.log(OTP);
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    console.log(registerData);
+    console.log(OTP);
+    axios
+      .post("http://localhost:8000/api/v1/auth/verifyRegistrationOTP", {email: registerData.email, otp: parseInt(OTP)}, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if(res.data.success === true){
+          setRefreshAuthContext((prev) => !prev)
+          navigate("/dashboard")
+        }
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response?.data?.message || "Registration error");
+        if (err.response?.data?.message === "Verification Code already sent") {
+          console.log("redirected");
+        }
+      });
+
+  };
+
+
+  return (
+    <div className="register-container">
+      <div className="register-left">
+        <div className="register-static-container">
+          <div className="register-heading">Register</div>
+          <p className="register-message">Verify your OTP below</p>
+        </div>
+        <form className="register-form" onSubmit={handleRegister}>
+          <input type="number" className="register-input" value={OTP} name="OTP" onChange={handleInputChange} />
+          <button type="submit" className="register-button">
+            Verify OTP
+          </button>
+        </form>
+      </div>
+
+      <div className="register-right">
+        <h1 className="register-logo">📚 BookWorm</h1>
+        <p className="register-tagline">Already have an account?</p>
+        <NavLink className="register-navlink" to="/login">
+          Login
+        </NavLink>
+      </div>
+    </div>
+  );
+};
+
+export default VerifyOTP;

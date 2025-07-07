@@ -4,6 +4,8 @@ import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
 import Dashboard from '../pages/user/Dashboard'
 import Home from '../pages/user/Home'
+import VerifyOTP from '../pages/auth/VerifyOTP'
+import ProtectedRoute from './ProtectedRoute'
 
 const AppRoutes = () => {
   return (
@@ -11,7 +13,8 @@ const AppRoutes = () => {
       <Route path='/' element={<Home />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/dashboard' element={<Dashboard />} />
+      <Route path='/register/verify' element={<VerifyOTP />} />
+      <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
     </Routes>
   )
 }
