@@ -12,6 +12,7 @@ import Users from '../pages/user/Users'
 import AddNewAdmin from '../pages/user/AddNewAdmin'
 import { AuthContext } from '../context/AuthContext'
 import Profile from '../pages/user/Profile'
+import ChangePassword from '../pages/user/ChangePassword'
 
 const AppRoutes = () => {
   const {user, isAdmin} = useContext(AuthContext);
@@ -27,6 +28,7 @@ const AppRoutes = () => {
       {isAdmin(user) && <Route path='/users' element={<ProtectedRoute><Users /></ProtectedRoute>} />}
       <Route path='/add-new-admin' element={<ProtectedRoute><AddNewAdmin /></ProtectedRoute>} />
       <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path='/change-password' element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
     </Routes>
   )
 }

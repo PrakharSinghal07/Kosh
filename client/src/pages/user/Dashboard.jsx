@@ -21,7 +21,6 @@ const Dashboard = () => {
     setDueBooks(dueBooks);
     const overDue = borrows.filter((book) => !book.returnDate && new Date(book.dueDate) < new Date());
     setOverDueBooks(overDue);
-    console.log(borrows);
   }, [borrows]);
   const handleSearch = (e) => {
     const search = e.target.value.toLowerCase();
@@ -48,33 +47,29 @@ const Dashboard = () => {
     const updateDateTime = () => {
       const now = new Date();
 
-      // Format time with AM/PM
       const formattedTime = now.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
       });
 
-      // Example: "July 7, 2025"
       const formattedDate = `${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
-      setDate(formattedTime); // shows "02:35 PM"
-      setTime(formattedDate); // shows "July 7, 2025"
+      setDate(formattedTime); 
+      setTime(formattedDate); 
     };
 
-    updateDateTime(); // set immediately on load
+    updateDateTime(); 
 
-    const intervalId = setInterval(updateDateTime, 30000); // update every second
+    const intervalId = setInterval(updateDateTime, 30000); 
 
     return () => clearInterval(intervalId);
   }, []);
 
-  console.log(user);
   return (
     <>
       <div className="dashboard-container">
         <Sidebar />
-        {console.log(userContextUpdated)}
         <main className="main-content">
           <header className="header">
             <h2>Hi {user && user.name.charAt(0).toUpperCase() + user.name.slice(1)}</h2>
@@ -162,7 +157,12 @@ const Dashboard = () => {
               <div>
                 <p>Books Due</p>
                 <p>{dueBooks.length}</p>
-                <p className="red"></p>
+                <div className="active-avatars">
+                  <img src="https://placehold.co/32x32/059669/ffffff?text=D1" alt="B1" />
+                  <img src="https://placehold.co/32x32/10b981/ffffff?text=D2" alt="B2" />
+                  <img src="https://placehold.co/32x32/34d399/ffffff?text=D3" alt="B3" />
+                  <img src="https://placehold.co/32x32/6ee7b7/ffffff?text=D4" alt="B4" />
+                </div>
               </div>
               <div className="stat-card-icon blue">
                 <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -235,12 +235,9 @@ const Dashboard = () => {
                   {borrowedData.map((borrow, index) => (
                     <tr key={index}>
                       {isAdmin(user) && <td>{borrow?.user?.name}</td>}
-                      <td>{borrow?.book?.title.slice(0, 25)}</td>
+                      <td>{borrow?.book?.title?.slice(0, 25)}</td>
                       <td>₹{borrow?.book?.price}</td>
                       <td>{new Date(borrow?.dueDate).toLocaleDateString()}</td>
-                      {/* <td>{loan.id}</td>
-                      <td>{loan.loanDate}</td>
-                      <td>{loan.dueDate}</td>  */}
                       <td>
                         <span className={`status-badge ${borrow?.returnDate ? "active" : "overdue"}`}>{borrow?.returnDate ? "Returned" : "Due"}</span>
                       </td>

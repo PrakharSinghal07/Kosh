@@ -6,12 +6,15 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const Catalog = () => {
-  const {isAdmin, user} = useContext(AuthContext);
+  const { isAdmin, user } = useContext(AuthContext);
   const { borrows, setUserContextUpdated } = useContext(UserContext);
   const [filteredBorrows, setFilteredBorrows] = useState([]);
   const [sortOrder, setSortOrder] = useState("Oldest");
-  const [returnBorrow, setReturnBorrow] = useState(null); // Track specific borrow for modal
+  const [returnBorrow, setReturnBorrow] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
+  const [error, setError] = useState("");
+  const [isReturned, setisReturned] = useState(false);
+  const [returnModal, setReturnModal] = useState(false);
   useEffect(() => {
     setFilteredBorrows(borrows);
   }, [borrows]);
@@ -38,12 +41,20 @@ const Catalog = () => {
   };
 
   const handleReturn = async (id, email) => {
-    console.log(email, id);
     try {
       await axios.put(`http://localhost:8000/api/v1/borrow/returnBook/${id}`, { email: email }, { withCredentials: true });
       setUserContextUpdated((prev) => !prev);
-      setReturnBorrow(null);
+      setisReturned(true);
+      const timer = setTimeout(() => {
+        setReturnModal(false);
+        setReturnBorrow(null);
+      }, 10000);
+      setReturnModal(false);
+      // setReturnBorrow(null);
+      console.log(returnBorrow);
+      setError("");
     } catch (err) {
+      setError(err.response.data.message);
       console.error(err);
     }
   };
@@ -51,15 +62,15 @@ const Catalog = () => {
   const handleFilterDueBorrows = (e) => {
     const filtered = [...borrows].filter((borrow) => {
       return !borrow.returnDate;
-    })
+    });
     setActiveFilter("due");
     setFilteredBorrows(filtered);
-  }
+  };
 
   const handleFilterAllBorrows = () => {
     setActiveFilter("all");
-    setFilteredBorrows(borrows)
-  }
+    setFilteredBorrows(borrows);
+  };
 
   return (
     <div className="catalog-container">
@@ -78,8 +89,12 @@ const Catalog = () => {
           </div>
         </header>
         <div className="toggle">
-          <button className={`all-borrows ${activeFilter === "all" && "active"}`} onClick={handleFilterAllBorrows}>All</button>
-          <button className={`due-borrows ${activeFilter === "due" && "active"}`} onClick={handleFilterDueBorrows}>Due</button>
+          <button className={`all-borrows ${activeFilter === "all" && "active"}`} onClick={handleFilterAllBorrows}>
+            All
+          </button>
+          <button className={`due-borrows ${activeFilter === "due" && "active"}`} onClick={handleFilterDueBorrows}>
+            Due
+          </button>
         </div>
         <section className="catalog-section">
           <table className="catalog-table">
@@ -87,33 +102,37 @@ const Catalog = () => {
               <tr>
                 <th>Book Title</th>
                 <th>{isAdmin(user) ? "User Email" : "Price"}</th>
-                <th>{isAdmin(user) ? "Borrowed On": "Due Date"}</th>
-                <th><p>Status</p></th>
+                <th>{isAdmin(user) ? "Borrowed On" : "Due Date"}</th>
+                <th>
+                  <p>Status</p>
+                </th>
               </tr>
             </thead>
             <tbody>
-              {filteredBorrows.map((borrow) => (
-                <tr key={borrow._id}>
+              {filteredBorrows.map((borrow, idx) => (
+                <tr key={borrow?._id ? borrow?._id : idx}>
                   <td>{borrow?.book?.title}</td>
                   <td>{isAdmin(user) ? borrow?.user?.email : `₹` + borrow.book.price}</td>
                   <td>{isAdmin(user) ? new Date(borrow.createdAt).toLocaleDateString() : new Date(borrow.dueDate).toLocaleDateString()}</td>
                   <td>
-                    {isAdmin(user) && <span className={`status-chip ${borrow.returnDate && "returned"}`}>
-                      {borrow.returnDate ? (
-                        "Returned"
-                      ) : (
-                        <button className="return-button" onClick={() => setReturnBorrow(borrow)}>
-                          Return
-                        </button>
-                      )}
-                    </span>}
-                    {!isAdmin(user) && <span className={`status-chip ${borrow.returned ? "returned" : "borrowed"}`}>
-                      {borrow.returnDate ? (
-                        "Returned"
-                      ) : (
-                        "Borrowed"
-                      )}
-                    </span>}
+                    {isAdmin(user) && (
+                      <span className={`status-chip ${borrow.returnDate && "returned"}`}>
+                        {borrow.returnDate ? (
+                          "Returned"
+                        ) : (
+                          <button
+                            className="return-button"
+                            onClick={() => {
+                              setReturnModal(true);
+                              setReturnBorrow(borrow);
+                            }}
+                          >
+                            Return
+                          </button>
+                        )}
+                      </span>
+                    )}
+                    {!isAdmin(user) && <span className={`status-chip ${borrow.returnDate ? "returned" : "borrowed"}`}>{borrow.returnDate ? "Returned" : "Borrowed"}</span>}
                   </td>
                 </tr>
               ))}
@@ -121,25 +140,84 @@ const Catalog = () => {
           </table>
         </section>
 
-        {/* ✅ Return Modal Outside Loop */}
-        {returnBorrow && (
+        {returnModal && (
           <div className="return-modal-overlay">
             <div className="return-modal">
               <h3>Return Book</h3>
               <div className="return-details">
                 <div className="return-modal-email">
-                  <label htmlFor="email"><strong>Title:</strong></label>
-                  <input type="text" value={returnBorrow.book.title} id="email" disabled />
+                  <label htmlFor="email">
+                    <strong>Title:</strong>
+                  </label>
+                  <input type="text" value={returnBorrow?.book?.title} id="email" disabled />
                 </div>
                 <div className="return-modal-email">
-                  <label htmlFor="email"><strong>Email:</strong></label>
-                  <input type="text" value={returnBorrow.user.email} id="email" disabled />
+                  <label htmlFor="email">
+                    <strong>Email:</strong>
+                  </label>
+                  <input type="text" value={returnBorrow?.user?.email} id="email" disabled />
                 </div>
               </div>
               <div className="return-modal-buttons">
                 <button onClick={() => handleReturn(returnBorrow.book._id, returnBorrow.user.email)}>Return</button>
-                <button className="cancel" onClick={() => setReturnBorrow(null)}>
+                <button
+                  className="cancel"
+                  onClick={() => {
+                    setReturnModal(false);
+                    setReturnBorrow(null);
+                  }}
+                >
                   Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {isReturned && (
+          <div className="receipt-modal-overlay">
+            <div className="receipt-paper">
+              <div className="bar"></div>
+              <div className="receipt-header">
+                <h2>Book Return Receipt</h2>
+                <p>Library Management System</p>
+                <div className="receipt-line dashed" />
+              </div>
+
+              <div className="receipt-body">
+                <div className="receipt-row">
+                  <span>Book Title:</span>
+                  <span>{returnBorrow?.book?.title?.length > 25 ? returnBorrow.book.title.slice(0, 25) + "..." : returnBorrow?.book?.title}</span>
+                </div>
+                <div className="receipt-row">
+                  <span>User Name:</span>
+                  <span>{returnBorrow?.user?.name}</span>
+                </div>
+                <div className="receipt-row">
+                  <span>Price:</span>
+                  <span>₹{returnBorrow?.book?.price}</span>
+                </div>
+                <div className="receipt-row">
+                  <span>Fine:</span>
+                  <span>₹{returnBorrow?.fine}</span>
+                </div>
+
+                <div className="receipt-line dashed" />
+                <div className="receipt-row total">
+                  <span>Total Paid:</span>
+                  <span>₹{returnBorrow?.price}</span>
+                </div>
+                <div className="receipt-line dashed" />
+              </div>
+
+              <div className="receipt-footer">
+                <button
+                  className="receipt-close-btn"
+                  onClick={() => {
+                    setReturnBorrow(null);
+                    setisReturned(false);
+                  }}
+                >
+                  Close
                 </button>
               </div>
             </div>

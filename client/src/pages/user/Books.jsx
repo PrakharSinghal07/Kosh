@@ -6,7 +6,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const Books = () => {
-  const {user, isAdmin} = useContext(AuthContext);
+  const { user, isAdmin } = useContext(AuthContext);
   const { allBooks, setUserContextUpdated } = useContext(UserContext);
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -18,7 +18,7 @@ const Books = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [email, setEmail] = useState("");
   const [newBook, setNewBook] = useState({ availability: true });
-
+  const [error, setError] = useState("");
   useEffect(() => {
     setBooks(allBooks);
     setFilteredBooks(allBooks);
@@ -56,23 +56,21 @@ const Books = () => {
   };
 
   const handleAssignSubmit = () => {
-    console.log(`Assigning "${selectedBook.title}" to:`, email);
     axios
       .post(`http://localhost:8000/api/v1/borrow/recordBorrowBook/${selectedBook._id}`, { email: email }, { withCredentials: true })
       .then((res) => {
-        console.log(res);
         setUserContextUpdated((prev) => !prev);
+        setError("");
+        setShowAssignModal(false);
+        setEmail("");
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.response.data.message);
       });
-    setShowAssignModal(false);
-    setEmail("");
   };
 
   const handleAddBookInputChange = (e) => {
     const { name, value, checked } = e.target;
-    console.log(name, value, checked);
     if (name === "availability") {
       setNewBook({ ...newBook, [name]: checked });
     } else {
@@ -82,16 +80,16 @@ const Books = () => {
 
   const handleCreateNewBook = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:8000/api/v1/book/admin/addBooks", newBook, {withCredentials: true})
-    .then((res) => {
-      console.log(res);
-      setUserContextUpdated((prev) => !prev)
-      setShowAddBookModal(false)
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
+    axios
+      .post("http://localhost:8000/api/v1/book/admin/addBooks", newBook, { withCredentials: true })
+      .then((res) => {
+        setUserContextUpdated((prev) => !prev);
+        setShowAddBookModal(false);
+      })
+      .catch((err) => {
+
+      });
+  };
   return (
     <div className="books-container">
       <Sidebar />
@@ -99,31 +97,38 @@ const Books = () => {
         <header className="books-header">
           <h2>Books Collection</h2>
           <div className="books-controls">
-            {isAdmin(user) && <button className="add-book-btn" onClick={() => setShowAddBookModal(true)}>
-              Add Book
-            </button>}
+            {isAdmin(user) && (
+              <button className="add-book-btn" onClick={() => setShowAddBookModal(true)}>
+                Add Book
+              </button>
+            )}
             {showAddBookModal && (
               <div className="books-modal-overlay">
                 <div className="books-modal">
                   <h3>Add Book</h3>
                   <form onSubmit={handleCreateNewBook}>
                     <input type="text" name="title" required placeholder="Title" onChange={handleAddBookInputChange} />
-                  <input type="text" name="author" required placeholder="Author" onChange={handleAddBookInputChange} />
-                  <textarea name="description" required placeholder="Description" onChange={handleAddBookInputChange} />
-                  <input type="number" name="price" required placeholder="Price" onChange={handleAddBookInputChange} />
-                  <input type="number" name="quantity" required placeholder="Quantity" onChange={handleAddBookInputChange} />
-                  <div className="checkbox">
-                    <label htmlFor="available">Book Available</label>
-                    <input type="checkbox" name="availability" defaultChecked id="available" onChange={handleAddBookInputChange} />
-                  </div>
-                  <div className="books-modal-buttons">
-                    <button>Create</button>
-                    <button className="cancel" onClick={(e) => {e.preventDefault() ;setShowAddBookModal(false)}}>
-                      Cancel
-                    </button>
-                  </div>
+                    <input type="text" name="author" required placeholder="Author" onChange={handleAddBookInputChange} />
+                    <textarea name="description" required placeholder="Description" onChange={handleAddBookInputChange} />
+                    <input type="number" name="price" required placeholder="Price" onChange={handleAddBookInputChange} />
+                    <input type="number" name="quantity" required placeholder="Quantity" onChange={handleAddBookInputChange} />
+                    <div className="checkbox">
+                      <label htmlFor="available">Book Available</label>
+                      <input type="checkbox" name="availability" defaultChecked id="available" onChange={handleAddBookInputChange} />
+                    </div>
+                    <div className="books-modal-buttons">
+                      <button>Create</button>
+                      <button
+                        className="cancel"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setShowAddBookModal(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </form>
-                  
                 </div>
               </div>
             )}
@@ -215,7 +220,16 @@ const Books = () => {
               <p>
                 Enter the user's email to assign <strong>{selectedBook?.title}</strong>:
               </p>
-              <input type="email" placeholder="User email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input
+                type="email"
+                placeholder="User email"
+                value={email}
+                onChange={(e) => {
+                  setError("");
+                  setEmail(e.target.value);
+                }}
+              />
+              <p className="error">{error}</p>
               <div className="books-modal-buttons">
                 <button onClick={handleAssignSubmit}>Assign</button>
                 <button className="cancel" onClick={() => setShowAssignModal(false)}>

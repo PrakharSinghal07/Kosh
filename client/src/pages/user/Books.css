@@ -1,7 +1,7 @@
 
 .sidebar {
   width: 14rem;
-  flex-shrink: 0; /* 💥 prevents shrinking */
+  flex-shrink: 0; 
 }
 .books-container {
   display: flex;
@@ -15,7 +15,7 @@
   padding: 2rem;
 }
 
-/* Header Section */
+
 .books-header {
   display: flex;
   justify-content: space-between;
@@ -77,7 +77,7 @@
   outline: none;
 }
 
-/* Book Section */
+
 .books-section {
   background-color: #ffffff;
   padding: 1.5rem;
@@ -118,7 +118,7 @@
   white-space: nowrap;
 }
 
-/* Status badge */
+
 .status-badge {
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
@@ -138,7 +138,7 @@
   color: #dc2626;
 }
 
-/* Action buttons */
+
 .books-actions {
   display: flex;
   gap: 0.5rem;
@@ -160,7 +160,7 @@
   background-color: #4f46e5;
 }
 
-/* Modal Styles */
+
 
 .books-modal.read-modal {
   max-height: 80vh;
@@ -219,7 +219,7 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  overflow: hidden; /* ✅ Prevent scroll on overlay */
+  overflow: hidden; 
 }
 
 .books-modal {
@@ -228,14 +228,14 @@
   border-radius: 1rem;
   width: 90%;
   max-width: 500px;
-  max-height: 90vh;         /* ✅ Prevent overflowing modal */
-  overflow-y: auto;         /* ✅ Allow content to scroll if needed */
+  max-height: 90vh;        
+  overflow-y: auto;        
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   text-align: center;
-  scrollbar-width: none;    /* Firefox */
+  scrollbar-width: none;   
 }
 
-/* ✅ Hide scrollbar for WebKit (Chrome, Edge, Safari) */
+
 .books-modal::-webkit-scrollbar {
   display: none;
 }
@@ -244,7 +244,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   border-radius: 0.5rem;
-  background-color: #10b981; /* green-500 */
+  background-color: #10b981;
   color: white;
   border: none;
   cursor: pointer;
@@ -252,7 +252,7 @@
 }
 
 .add-book-btn:hover {
-  background-color: #059669; /* green-600 */
+  background-color: #059669;
 }
 
 
@@ -353,7 +353,7 @@
   color: #111827;
 }
 
-/* Checkbox Wrapper */
+
 .books-modal .checkbox {
   display: flex;
   align-items: center;
@@ -364,9 +364,9 @@
   color: #374151;
 }
 
-/* Custom Checkbox */
+
 .books-modal .checkbox input[type="checkbox"] {
-  /* appearance: none; */
+  
   width: 1rem;
   height: 1rem;
 
@@ -378,7 +378,7 @@
 
 
 
-/* Animation */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -388,4 +388,11 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+
+.error{
+  justify-self: flex-start;
+  margin-bottom: 13px;
+  color: #dc2626 !important;
 }

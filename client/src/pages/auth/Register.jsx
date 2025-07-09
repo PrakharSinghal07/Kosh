@@ -1,18 +1,16 @@
 import { useContext, useState } from "react";
-import "./Register.css"; // Using separate CSS if needed
+import "./Register.css";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 
 const Register = () => {
-  // const [registerData, setRegisterData] = useState({
-  //   email: "",
-  //   name: "",
-  //   password: "",
-  // });
   const [loader, setLoader] = useState(false);
-  const { registerData, setRegisterData } = useContext(AuthContext);
+  const [registerData, setRegisterData] = useState({
+    email: "",
+    name: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -33,21 +31,17 @@ const Register = () => {
       })
       .then((res) => {
         setLoader(false);
-        console.log(res.data);
         setError(null);
         navigate("/register/verify");
       })
       .catch((err) => {
         setLoader(false);
         console.log(err.response?.data?.message || "Registration error");
-        setError(err.response?.data?.message || "Registration error")
+        setError(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
           navigate("/register/verify");
-          console.log("redirected");
         }
       });
-
-    // setRegisterData({ email: "", password: "", name: "" });
   };
 
   const handleShowPassword = (e) => {

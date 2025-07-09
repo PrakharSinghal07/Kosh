@@ -79,7 +79,21 @@
   margin-top: 1.8rem;
   background-color: #ef4444;
   color: white;
-  padding: 0.65rem 1.4rem;
+  padding: 0.65rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.logout-button:hover {
+  background-color: #dc2626;
+}
+.change-pass-button{
+  margin-top: 1.8rem;
+  background-color: #28b22f;
+  color: white;
+  padding: 0.65rem 2rem;
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -87,15 +101,15 @@
   transition: background 0.2s ease;
 }
 
-.logout-button:hover {
-  background-color: #dc2626;
+.change-pass-button:hover{
+  background-color: #098f0f;
 }
 
 .logout-modal-overlay {
   position: fixed;
   inset: 0;
   backdrop-filter: blur(6px);
-  background-color: rgba(17, 24, 39, 0.4); /* dark blur */
+  background-color: rgba(17, 24, 39, 0.4); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,7 +190,7 @@
   transform: translateY(-1px);
 }
 
-/* Animations */
+
 @keyframes slideUp {
   from {
     transform: translateY(20px);
@@ -195,4 +209,10 @@
   to {
     background-color: rgba(17, 24, 39, 0.4);
   }
+}
+.profile-btn{
+  display: flex;
+
+  align-items: center;
+  justify-content: space-around;
 }

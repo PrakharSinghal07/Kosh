@@ -1,43 +1,39 @@
 import { useContext, useState } from "react";
-import "./Register.css"; // Using separate CSS if needed
+import "./Register.css";
 import axios from "axios";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const VerifyOTP = () => {
-  const {registerData, setRefreshAuthContext} = useContext(AuthContext);
+  const { registerData, setRefreshAuthContext } = useContext(AuthContext);
   const [OTP, setOTP] = useState("");
   const navigate = useNavigate();
   const handleInputChange = (e) => {
-    setOTP(e.target.value)
-    console.log(OTP);
+    setOTP(e.target.value);
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log(registerData);
-    console.log(OTP);
     axios
-      .post("http://localhost:8000/api/v1/auth/verifyRegistrationOTP", {email: registerData.email, otp: parseInt(OTP)}, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if(res.data.success === true){
-          setRefreshAuthContext((prev) => !prev)
-          navigate("/dashboard")
+      .post(
+        "http://localhost:8000/api/v1/auth/verifyRegistrationOTP",
+        { email: registerData.email, otp: parseInt(OTP) },
+        {
+          withCredentials: true,
         }
-        console.log(res.data);
+      )
+      .then((res) => {
+        if (res.data.success === true) {
+          setRefreshAuthContext((prev) => !prev);
+          navigate("/dashboard");
+        }
       })
       .catch((err) => {
         console.log(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
-          console.log("redirected");
         }
       });
-
   };
-
 
   return (
     <div className="register-container">

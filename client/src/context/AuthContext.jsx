@@ -20,29 +20,34 @@ export const AuthProvider = ({ children }) => {
   const [refreshAuthContext, setRefreshAuthContext] = useState(false);
   const [loading, setLoading] = useState(true); // Optional: useful for guarding routes
   useEffect(() => {
-    setLoading(true); 
-    axios
-      .get("http://localhost:8000/api/v1/auth/me", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setUser({
-          name: res.data.user.name,
-          email: res.data.user.email,
-          role: res.data.user.role,
-          createdAt: res.data.user.createdAt,
-        });
-        setIsAuthenticated(true);
-      })
-      .catch((err) => {
-        console.error("Auth error:", err.response?.data?.message);
+  setLoading(true);
+  axios
+    .get("http://localhost:8000/api/v1/auth/me", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      setUser({
+        name: res.data.user.name,
+        email: res.data.user.email,
+        role: res.data.user.role,
+        createdAt: res.data.user.createdAt,
+      });
+      setIsAuthenticated(true);
+    })
+    .catch((err) => {
+      if (err.response?.status === 401) {
+        // User is not logged in
         setUser(null);
         setIsAuthenticated(false);
-      })
-      .finally(() => {
-        setLoading(false); // end loading
-      });
-  }, [refreshAuthContext]);
+      } else {
+        console.error("Auth error:", err.response?.data?.message || err.message);
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, [refreshAuthContext]);
+
   const isAdmin = (user) => {
     return user?.role === "Admin";
   }

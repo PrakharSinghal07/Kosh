@@ -33,26 +33,29 @@ const Profile = () => {
         <div className="profile-card">
           <div className="profile-header">
             <div className="profile-avatar">
-              {user?.url ? (
-                <img src={user.url} alt="User Avatar" />
-              ) : (
-                <div className="avatar-fallback">
-                  {user?.name?.slice(0, 1).toUpperCase() || "U"}
-                </div>
-              )}
+              {user?.url ? <img src={user.url} alt="User Avatar" /> : <div className="avatar-fallback">{user?.name?.slice(0, 1).toUpperCase() || "U"}</div>}
             </div>
             <h2>{user?.name || "N/A"}</h2>
             <p className="profile-role">{user?.role?.toUpperCase()}</p>
           </div>
 
           <div className="profile-details">
-            <p><strong>Email:</strong> {user?.email || "N/A"}</p>
-            <p><strong>Joined:</strong> {formattedDate || "N/A"}</p>
+            <p>
+              <strong>Email:</strong> {user?.email || "N/A"}
+            </p>
+            <p>
+              <strong>Joined:</strong> {formattedDate || "N/A"}
+            </p>
           </div>
 
-          <button className="logout-button" onClick={() => setShowConfirm(true)}>
-            Logout
-          </button>
+          <div className="profile-btn">
+            <button className="logout-button" onClick={() => setShowConfirm(true)}>
+              Logout
+            </button>
+            <button className="change-pass-button" onClick={() => navigate("/change-password")}>
+              Change Password
+            </button>
+          </div>
         </div>
 
         {showConfirm && (

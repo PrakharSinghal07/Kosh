@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   const [borrows, setBorrows] = useState([]);
   const [userContextUpdated, setUserContextUpdated] = useState(false);
   const { user, isAdmin, isAuthenticated } = useContext(AuthContext);
-  // 🔹 Fetch Books
+
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -21,7 +21,7 @@ const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:8000/api/v1/book/getAllBooks", {
           withCredentials: true,
         });
-        console.log("📚 Books:", res.data.books);
+        // console.log("📚 Books:", res.data.books);
         setAllBooks(res.data.books);
       } catch (error) {
         console.error("❌ Error fetching books:", error);
@@ -31,7 +31,6 @@ const UserProvider = ({ children }) => {
     fetchBooks();
   }, [isAuthenticated, userContextUpdated]);
 
-  // 🔹 Fetch Users
   useEffect(() => {
     if (!isAuthenticated) return;
     if (!isAdmin(user)) {
@@ -42,17 +41,16 @@ const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:8000/api/v1/user/all", {
           withCredentials: true,
         });
-        console.log("👥 Users:", res.data.users);
+        // console.log("👥 Users:", res.data.users);
         setAllUsers(res.data.users);
       } catch (error) {
-        console.error("❌ Error fetching users:", error);
+        console.error("Error fetching users:", error);
       }
     };
 
     fetchUsers();
   }, [isAuthenticated, userContextUpdated]);
 
-  // 🔹 Fetch Borrows
   useEffect(() => {
     if (!isAuthenticated) return;
     const fetchUserBorrows = async () => {
@@ -60,10 +58,10 @@ const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:8000/api/v1/borrow/getBorrowedBooks", {
           withCredentials: true,
         });
-        console.log("🔄 Borrows:", res);
+        // console.log("🔄 Borrows:", res);
         setBorrows(res.data.borrowedBooks);
       } catch (error) {
-        console.error("❌ Error fetching borrows:", error);
+        console.error("Error fetching borrows:", error);
       }
     };
 
@@ -72,7 +70,7 @@ const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:8000/api/v1/borrow/getAllBorrows", {
           withCredentials: true,
         });
-        console.log("🔄 Borrows:", res.data.borrows);
+        // console.log("🔄 Borrows:", res.data.borrows);
         setBorrows(res.data.borrows);
       } catch (error) {
         console.error("❌ Error fetching borrows:", error);

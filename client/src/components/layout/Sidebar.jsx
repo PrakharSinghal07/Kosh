@@ -21,8 +21,6 @@ const Sidebar = () => {
             <li>
               <NavLink to="/dashboard" onClick={() => setActiveLink("Dashboard")} className={`nav-link ${activeLink === "Dashboard" ? "active" : ""}`}>
                 <span>
-                  {/* [SVG icons unchanged] */}
-                  {/* ... all your original icons here ... */}
                 </span>
                 <span>{"Dashboard"}</span>
                 <span>
@@ -35,8 +33,6 @@ const Sidebar = () => {
             <li>
               <NavLink to="/books" onClick={() => setActiveLink("Books")} className={`nav-link ${activeLink === "Books" ? "active" : ""}`}>
                 <span>
-                  {/* [SVG icons unchanged] */}
-                  {/* ... all your original icons here ... */}
                 </span>
                 <span>{"Books"}</span>
                 <span>
@@ -49,8 +45,6 @@ const Sidebar = () => {
             <li>
               <NavLink to="/catalog" onClick={() => setActiveLink("Catalog")} className={`nav-link ${activeLink === "Catalog" ? "active" : ""}`}>
                 <span>
-                  {/* [SVG icons unchanged] */}
-                  {/* ... all your original icons here ... */}
                 </span>
                 <span>{"Catalog"}</span>
                 <span>
