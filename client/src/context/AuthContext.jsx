@@ -18,11 +18,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [refreshAuthContext, setRefreshAuthContext] = useState(false);
-  const [loading, setLoading] = useState(true); // Optional: useful for guarding routes
+  const [loading, setLoading] = useState(true); 
+  const apiUrl = import.meta.env.VITE_API_URL
+  console.log(apiUrl);
   useEffect(() => {
   setLoading(true);
   axios
-    .get("http://localhost:8000/api/v1/auth/me", {
+    .get(`${apiUrl}/api/v1/auth/me`, {
       withCredentials: true,
     })
     .then((res) => {

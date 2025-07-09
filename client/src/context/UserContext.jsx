@@ -12,13 +12,13 @@ const UserProvider = ({ children }) => {
   const [borrows, setBorrows] = useState([]);
   const [userContextUpdated, setUserContextUpdated] = useState(false);
   const { user, isAdmin, isAuthenticated } = useContext(AuthContext);
-
+  const apiUrl = import.meta.env.VITE_API_URL_API_URL
   useEffect(() => {
     if (!isAuthenticated) return;
 
     const fetchBooks = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/book/getAllBooks", {
+        const res = await axios.get(`${apiUrl}/api/v1/book/getAllBooks`, {
           withCredentials: true,
         });
         // console.log("📚 Books:", res.data.books);
