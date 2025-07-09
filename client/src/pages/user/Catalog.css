@@ -1,0 +1,275 @@
+.catalog-container {
+  display: flex;
+  height: 100vh;
+  background: #f9fafb;
+}
+
+.catalog-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.catalog-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.catalog-controls {
+  display: flex;
+  gap: 1rem;
+
+}
+
+.catalog-controls input{
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  outline: none;
+  background-color: transparent;
+}
+.catalog-controls-search{
+    background-color: #e0e7ff;
+    border-radius: 10px;
+}
+.catalog-controls-search input:focus {
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+}
+.catalog-controls select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: #ffffff;
+}
+
+.catalog-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+.catalog-table thead tr th {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #6b7280;
+  padding: 0.75rem 1rem 0rem 1rem;
+}
+
+th > p{
+  padding-left: 1rem;
+}
+.catalog-table tbody tr {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+}
+
+.catalog-table tbody tr td {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.status-chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-chip.borrowed {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-chip.returned {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.return-button {
+  background-color: #6366f1;
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.return-button:hover {
+  background-color: #4f46e5;
+}
+
+
+.return-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(31, 41, 55, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden; /* ✅ Prevent scroll on overlay */
+}
+
+.return-modal {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;         /* ✅ Prevent overflowing modal */
+  overflow-y: auto;         /* ✅ Allow content to scroll if needed */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  scrollbar-width: none;    /* Firefox */
+}
+
+/* ✅ Hide scrollbar for WebKit (Chrome, Edge, Safari) */
+.return-modal::-webkit-scrollbar {
+  display: none;
+}
+.add-book-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  background-color: #10b981; /* green-500 */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-book-btn:hover {
+  background-color: #059669; /* green-600 */
+}
+
+
+.return-modal h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.return-modal p {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.return-modal input {
+  width: 100%;
+  margin: 0rem 0rem 1rem 0rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.return-modal input:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+}
+
+.return-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.return-modal-buttons button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.return-modal-buttons button:first-child {
+  background-color: #16a34a;
+}
+
+.return-modal-buttons button:first-child:hover {
+  background-color: #15803d;
+}
+
+.return-modal-buttons button.cancel {
+  background-color: #dc2626;
+}
+
+.return-modal-buttons button.cancel:hover {
+  background-color: #b91c1c;
+}
+
+
+
+
+.return-modal-email{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.return-modal-email label{
+  align-self: flex-start;
+  margin-left: 10px;
+  font-size: 19px;
+}
+
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.toggle {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.toggle button {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Optional: Active Button Style (apply conditionally in JSX) */
+.toggle .active {
+  background-color: #4f46e5; /* Indigo */
+  color: white;
+  border-color: #4f46e5;
+}

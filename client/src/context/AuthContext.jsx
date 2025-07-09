@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   });
 
   const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState("user");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [refreshAuthContext, setRefreshAuthContext] = useState(false);
   const [loading, setLoading] = useState(true); // Optional: useful for guarding routes
@@ -30,8 +29,9 @@ export const AuthProvider = ({ children }) => {
         setUser({
           name: res.data.user.name,
           email: res.data.user.email,
+          role: res.data.user.role,
+          createdAt: res.data.user.createdAt,
         });
-        setUserRole(res.data.user.role);
         setIsAuthenticated(true);
       })
       .catch((err) => {
@@ -43,7 +43,9 @@ export const AuthProvider = ({ children }) => {
         setLoading(false); // end loading
       });
   }, [refreshAuthContext]);
-
+  const isAdmin = (user) => {
+    return user?.role === "Admin";
+  }
   return (
     <AuthContext.Provider
       value={{
@@ -57,7 +59,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated,
         setRefreshAuthContext,
         loading,
-        userRole
+        isAdmin
       }}
     >
       {children}

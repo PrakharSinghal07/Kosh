@@ -1,0 +1,391 @@
+
+.sidebar {
+  width: 14rem;
+  flex-shrink: 0; /* 💥 prevents shrinking */
+}
+.books-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: "Inter", sans-serif;
+}
+
+.books-main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* Header Section */
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.books-header h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.books-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.books-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #e0e7ff;
+  border-radius: 0.75rem;
+  padding-left: 2.5rem;
+}
+
+.books-search input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  outline: none;
+  background-color: transparent;
+}
+
+.books-search:focus-within {
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+}
+
+
+.books-search svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+}
+
+.books-select {
+  appearance: none;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  line-height: 1.25;
+  outline: none;
+}
+
+/* Book Section */
+.books-section {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.books-table thead {
+  background-color: #f9fafb;
+}
+
+.books-table th,
+.books-table td {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.books-table th {
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.books-table td {
+  color: #374151;
+  white-space: nowrap;
+}
+
+/* Status badge */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  display: inline-block;
+  text-align: center;
+}
+
+.status-badge.active {
+  background-color: #d1fae5;
+  color: #16a34a;
+}
+
+.status-badge.overdue {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Action buttons */
+.books-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.books-actions button {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  background-color: #6366f1;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.books-actions button:hover {
+  background-color: #4f46e5;
+}
+
+/* Modal Styles */
+
+.books-modal.read-modal {
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.books-modal.read-modal h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+.books-modal.read-modal p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #374151;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+
+.book-details {
+  text-align: left;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.book-description {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.books-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(31, 41, 55, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden; /* ✅ Prevent scroll on overlay */
+}
+
+.books-modal {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;         /* ✅ Prevent overflowing modal */
+  overflow-y: auto;         /* ✅ Allow content to scroll if needed */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  scrollbar-width: none;    /* Firefox */
+}
+
+/* ✅ Hide scrollbar for WebKit (Chrome, Edge, Safari) */
+.books-modal::-webkit-scrollbar {
+  display: none;
+}
+.add-book-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  background-color: #10b981; /* green-500 */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-book-btn:hover {
+  background-color: #059669; /* green-600 */
+}
+
+
+.books-modal h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.books-modal p {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.books-modal input {
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.books-modal input:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+}
+
+.books-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.books-modal-buttons button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.books-modal-buttons button:first-child {
+  background-color: #16a34a;
+}
+
+.books-modal-buttons button:first-child:hover {
+  background-color: #15803d;
+}
+
+.books-modal-buttons button.cancel {
+  background-color: #dc2626;
+}
+
+.books-modal-buttons button.cancel:hover {
+  background-color: #b91c1c;
+}
+.books-modal input[type="text"],
+.books-modal input[type="number"],
+.books-modal input[type="email"],
+.books-modal textarea,
+.books-modal select {
+  width: 100%;
+  margin: 0.75rem 0;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  outline: none;
+  background-color: #f9fafb;
+  color: #1f2937;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.books-modal input[type="text"]::placeholder,
+.books-modal input[type="email"]::placeholder,
+.books-modal input[type="number"]::placeholder,
+.books-modal textarea::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.books-modal input[type="text"]:focus,
+.books-modal input[type="number"]:focus,
+.books-modal input[type="email"]:focus,
+.books-modal textarea:focus,
+.books-modal select:focus {
+  background-color: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  color: #111827;
+}
+
+/* Checkbox Wrapper */
+.books-modal .checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0rem 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Custom Checkbox */
+.books-modal .checkbox input[type="checkbox"] {
+  /* appearance: none; */
+  width: 1rem;
+  height: 1rem;
+
+  cursor: pointer;
+  transition: 0.2s all ease;
+}
+
+
+
+
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
