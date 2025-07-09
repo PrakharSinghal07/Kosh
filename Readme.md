@@ -71,3 +71,22 @@ npm start
 cd ../client
 npm install
 npm run dev
+```
+
+## Environment Variables
+
+### For Server:
+```bash
+PORT=5000
+MONGO_URI=your_mongo_uri
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=https://bookworm-thelibrary-management-system.netlify.app/
+CLOUDINARY_CLIENT_NAME=your_cloudinary_name
+CLOUDINARY_CLIENT_API=your_cloudinary_key
+CLOUDINARY_CLIENT_SECRET=your_cloudinary_secret
+
+```
+### For client
+```bash
+VITE_API_URL=https://library-management-system-v294.onrender.com
+```

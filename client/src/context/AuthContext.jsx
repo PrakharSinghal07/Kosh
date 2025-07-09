@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
   const [refreshAuthContext, setRefreshAuthContext] = useState(false);
   const [loading, setLoading] = useState(true); 
   const apiUrl = import.meta.env.VITE_API_URL
-  console.log(apiUrl);
   useEffect(() => {
   setLoading(true);
   axios
