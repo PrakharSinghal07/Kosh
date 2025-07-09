@@ -24,7 +24,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: ["https://bookworm-thelibrary-management-system.netlify.app/"],
+    origin: ["https://bookworm-thelibrary-management-system.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
