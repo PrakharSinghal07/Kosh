@@ -6,6 +6,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const Books = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { user, isAdmin } = useContext(AuthContext);
   const { allBooks, setUserContextUpdated } = useContext(UserContext);
   const [books, setBooks] = useState([]);
@@ -57,7 +58,7 @@ const Books = () => {
 
   const handleAssignSubmit = () => {
     axios
-      .post(`http://localhost:8000/api/v1/borrow/recordBorrowBook/${selectedBook._id}`, { email: email }, { withCredentials: true })
+      .post(`${apiUrl}/api/v1/borrow/recordBorrowBook/${selectedBook._id}`, { email: email }, { withCredentials: true })
       .then((res) => {
         setUserContextUpdated((prev) => !prev);
         setError("");
@@ -81,14 +82,12 @@ const Books = () => {
   const handleCreateNewBook = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8000/api/v1/book/admin/addBooks", newBook, { withCredentials: true })
+      .post(`${apiUrl}/api/v1/book/admin/addBooks`, newBook, { withCredentials: true })
       .then((res) => {
         setUserContextUpdated((prev) => !prev);
         setShowAddBookModal(false);
       })
-      .catch((err) => {
-
-      });
+      .catch((err) => {});
   };
   return (
     <div className="books-container">

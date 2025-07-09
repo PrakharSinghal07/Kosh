@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const ChangePassword = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { user } = useContext(AuthContext);
   const [isVerified, setIsVerified] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,7 +41,7 @@ const ChangePassword = () => {
     if (!isVerified) {
       try {
         const res = await axios.post(
-          "http://localhost:8000/api/v1/auth/forgetPassOTP",
+          `${apiUrl}/api/v1/auth/forgetPassOTP`,
           { email: user.email, currentPassword: formData.currentPassword },
           { withCredentials: true }
         );
@@ -65,7 +66,7 @@ const ChangePassword = () => {
 
       try {
         await axios.post(
-          "http://localhost:8000/api/v1/auth/verifyForgetpassOTP",
+          `${apiUrl}/api/v1/auth/verifyForgetpassOTP`,
           {
             email: user.email,
             otp: parseInt(formData.otp),
@@ -163,15 +164,7 @@ const ChangePassword = () => {
 
                 <div className="form-group">
                   <label htmlFor="otp">Enter OTP</label>
-                  <input
-                    type="number"
-                    required
-                    name="otp"
-                    id="otp"
-                    placeholder="Enter OTP"
-                    value={formData.otp}
-                    onChange={handleChange}
-                  />
+                  <input type="number" required name="otp" id="otp" placeholder="Enter OTP" value={formData.otp} onChange={handleChange} />
                 </div>
               </>
             )}

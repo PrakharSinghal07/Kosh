@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const VerifyOTP = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { registerData, setRefreshAuthContext } = useContext(AuthContext);
   const [OTP, setOTP] = useState("");
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const VerifyOTP = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:8000/api/v1/auth/verifyRegistrationOTP",
+        `${apiUrl}/api/v1/auth/verifyRegistrationOTP`,
         { email: registerData.email, otp: parseInt(OTP) },
         {
           withCredentials: true,

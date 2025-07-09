@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { setRefreshAuthContext } = useContext(AuthContext);
   const { setUserContextUpdated } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +34,7 @@ const Login = () => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8000/api/v1/auth/login", loginData, {
+      .post(`${apiUrl}/api/v1/auth/login`, loginData, {
         withCredentials: true,
       })
       .then((response) => {

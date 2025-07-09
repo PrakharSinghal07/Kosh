@@ -6,6 +6,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const Catalog = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { isAdmin, user } = useContext(AuthContext);
   const { borrows, setUserContextUpdated } = useContext(UserContext);
   const [filteredBorrows, setFilteredBorrows] = useState([]);
@@ -42,7 +43,7 @@ const Catalog = () => {
 
   const handleReturn = async (id, email) => {
     try {
-      await axios.put(`http://localhost:8000/api/v1/borrow/returnBook/${id}`, { email: email }, { withCredentials: true });
+      await axios.put(`${apiUrl}/api/v1/borrow/returnBook/${id}`, { email: email }, { withCredentials: true });
       setUserContextUpdated((prev) => !prev);
       setisReturned(true);
       const timer = setTimeout(() => {

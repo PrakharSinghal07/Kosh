@@ -5,6 +5,7 @@ import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 
 const AddNewAdmin = () => {
+  const apiUrl = import.meta.env.VITE_API_URL
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -38,7 +39,7 @@ const AddNewAdmin = () => {
     }
 
     try {
-      await axios.post("http://localhost:8000/api/v1/user/add/newAdmin", formData, {
+      await axios.post(`${apiUrl}/api/v1/user/add/newAdmin`, formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

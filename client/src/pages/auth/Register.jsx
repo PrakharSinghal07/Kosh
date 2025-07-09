@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [loader, setLoader] = useState(false);
   const [registerData, setRegisterData] = useState({
     email: "",
@@ -26,7 +27,7 @@ const Register = () => {
     e.preventDefault();
     setLoader(true);
     axios
-      .post("http://localhost:8000/api/v1/auth/getRegistrationOTP", registerData, {
+      .post(`${apiUrl}/api/v1/auth/getRegistrationOTP`, registerData, {
         withCredentials: true,
       })
       .then((res) => {

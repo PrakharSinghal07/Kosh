@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { user } = useContext(AuthContext);
   const { setUserContextUpdated } = useContext(UserContext);
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8000/api/v1/auth/logout", {
+      await axios.get(`${apiUrl}/api/v1/auth/logout`, {
         withCredentials: true,
       });
       setUserContextUpdated((prev) => !prev);

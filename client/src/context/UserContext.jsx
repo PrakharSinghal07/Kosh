@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   const [borrows, setBorrows] = useState([]);
   const [userContextUpdated, setUserContextUpdated] = useState(false);
   const { user, isAdmin, isAuthenticated } = useContext(AuthContext);
-  const apiUrl = import.meta.env.VITE_API_URL_API_URL
+  const apiUrl = import.meta.env.VITE_API_URL
   useEffect(() => {
     if (!isAuthenticated) return;
 
