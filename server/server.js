@@ -12,7 +12,7 @@ import { v2 as cloudinary } from "cloudinary";
 import expressFileUpload from "express-fileupload";
 import { deleteUnverifiedUsers } from "./services/deleteUnverifiedUsers.js";
 import { notifyUsers } from "./services/notifyUsers.js";
-config({ path: "./config/config.env" });
+config();
 
 const app = express();
 
@@ -24,7 +24,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: "*",
+    origin: [process.env.FRONTEND_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
