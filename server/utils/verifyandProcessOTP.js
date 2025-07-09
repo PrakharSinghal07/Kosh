@@ -4,7 +4,7 @@ import { checkInvalidOrExpiredOTP } from "./checkInvalidorExpiredOTP.js";
 
 export const verifyandProcessOTP = async (email, otp, next, checkVerified) => {
   if (!email || !otp)
-    return next(new ErrorHandler("Email and otp are requred", 400));
+    return next(new ErrorHandler("Email and otp are required", 400));
   const user = await User.findOne({ email }).select(
     "+verificationCode +verificationCodeExpires"
   );

@@ -26,7 +26,7 @@ export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler("Verification Code already sent", 400));
     }
     if (password.length < 8 || password.length >= 20) {
-      return next(new ErrorHandler("Password length is not of appropriate length", 400));
+      return next(new ErrorHandler("Password is not of appropriate length", 400));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -94,14 +94,19 @@ export const getUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const sendPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => {
-  const { email } = req.body;
+  const { email, currentPassword } = req.body;
   try {
     const user = await User.findOne({
       email,
       accountVerified: true,
-    });
+    }).select("+password");
     if (!user) {
       return next(new ErrorHandler("User is not authenticated", 400));
+    }
+    console.log(currentPassword, user);
+    const currentPass = await bcrypt.compare(currentPassword, user.password);
+    if (!currentPass) {
+      return next(new ErrorHandler("The entered password is incorrect", 400));
     }
     if (user.verificationCode && user.verificationCodeExpired > Date.now()) {
       return next(new ErrorHandler("Otp already sent to email", 400));
@@ -111,7 +116,8 @@ export const sendPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => 
     const sub = "Please use the following OTP to change your password. This code is valid for the next 15 minutes.";
     const message = await sendVerificationCode(verificationCode, email, sub, next);
     res.status(200).json({
-      message,
+      success: true,
+      message: "OTP sent to email",
     });
   } catch (err) {
     next(err);

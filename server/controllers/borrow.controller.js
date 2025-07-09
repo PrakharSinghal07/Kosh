@@ -116,7 +116,6 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
   // Step 1: Populate borrowedBooks > borrowId > book
   const user = await req.user.populate({
@@ -127,14 +126,16 @@ export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
   const borrowedBooks = user.borrowedBooks.map((entry) => {
     const borrow = entry.borrowId;
     return {
-      bookTitle: borrow.book.title,
-      bookAuthor: borrow.book.author,
-      price: borrow.price,
-      borrowDate: borrow.borrowDate,
-      dueDate: borrow.dueDate,
-      returnDate: borrow.returnDate,
-      fine: borrow.fine,
+      book: {
+        title: borrow?.book?.title,
+        author: borrow?.book?.author,
+        price: borrow?.price,
+      },
       returned: entry.returned,
+      borrowDate: borrow?.borrowDate,
+      dueDate: borrow?.dueDate,
+      returnDate: borrow?.returnDate,
+      fine: borrow?.fine,
     };
   });
 
@@ -145,11 +146,9 @@ export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
-
 export const getBorrowedBooksForAdmin = catchAsyncErrors(async (req, res, next) => {
   // Step 1: Populate borrowedBooks > borrowId > book
-  const borrows = await Borrow.find({}).populate("user").populate("book")
+  const borrows = await Borrow.find({}).populate("user").populate("book");
 
   // Step 3: Send response
   res.status(200).json({
