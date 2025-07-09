@@ -13,9 +13,9 @@ const Catalog = () => {
   const [sortOrder, setSortOrder] = useState("Oldest");
   const [returnBorrow, setReturnBorrow] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
-  const [error, setError] = useState("");
   const [isReturned, setisReturned] = useState(false);
   const [returnModal, setReturnModal] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {
     setFilteredBorrows(borrows);
   }, [borrows]);
@@ -42,12 +42,14 @@ const Catalog = () => {
   };
 
   const handleReturn = async (id, email) => {
+    setMessage("Please wait...")
     try {
       await axios.put(`${apiUrl}/api/v1/borrow/returnBook/${id}`, { email: email }, { withCredentials: true });
+      setMessage("");
       setUserContextUpdated((prev) => !prev);
       setisReturned(true);
       const timer = setTimeout(() => {
-        setReturnModal(false);
+        setisReturned(false);
         setReturnBorrow(null);
       }, 10000);
       setReturnModal(false);
@@ -158,6 +160,7 @@ const Catalog = () => {
                   </label>
                   <input type="text" value={returnBorrow?.user?.email} id="email" disabled />
                 </div>
+                <div className="message">{message}</div>
               </div>
               <div className="return-modal-buttons">
                 <button onClick={() => handleReturn(returnBorrow.book._id, returnBorrow.user.email)}>Return</button>

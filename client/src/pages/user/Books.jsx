@@ -20,6 +20,7 @@ const Books = () => {
   const [email, setEmail] = useState("");
   const [newBook, setNewBook] = useState({ availability: true });
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   useEffect(() => {
     setBooks(allBooks);
     setFilteredBooks(allBooks);
@@ -57,15 +58,19 @@ const Books = () => {
   };
 
   const handleAssignSubmit = () => {
+    setMessage("Please Wait...");
+    setError("");
     axios
       .post(`${apiUrl}/api/v1/borrow/recordBorrowBook/${selectedBook._id}`, { email: email }, { withCredentials: true })
       .then((res) => {
         setUserContextUpdated((prev) => !prev);
+        setMessage("");
         setError("");
         setShowAssignModal(false);
         setEmail("");
       })
       .catch((err) => {
+        setMessage("");
         setError(err.response.data.message);
       });
   };
@@ -115,6 +120,7 @@ const Books = () => {
                       <label htmlFor="available">Book Available</label>
                       <input type="checkbox" name="availability" defaultChecked id="available" onChange={handleAddBookInputChange} />
                     </div>
+
                     <div className="books-modal-buttons">
                       <button>Create</button>
                       <button
@@ -224,11 +230,13 @@ const Books = () => {
                 placeholder="User email"
                 value={email}
                 onChange={(e) => {
+                  setMessage("");
                   setError("");
                   setEmail(e.target.value);
                 }}
               />
-              <p className="error">{error}</p>
+              {error !== "" && <p className="error">{error}</p>}
+              {message !== "" && <p className="message" style={{"color": "#16a34a"}}>{message}</p>}
               <div className="books-modal-buttons">
                 <button onClick={handleAssignSubmit}>Assign</button>
                 <button className="cancel" onClick={() => setShowAssignModal(false)}>

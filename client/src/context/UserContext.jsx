@@ -38,7 +38,7 @@ const UserProvider = ({ children }) => {
     }
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/user/all", {
+        const res = await axios.get(`${apiUrl}/api/v1/user/all`, {
           withCredentials: true,
         });
         // console.log("👥 Users:", res.data.users);
@@ -55,7 +55,7 @@ const UserProvider = ({ children }) => {
     if (!isAuthenticated) return;
     const fetchUserBorrows = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/borrow/getBorrowedBooks", {
+        const res = await axios.get(`${apiUrl}/api/v1/borrow/getBorrowedBooks`, {
           withCredentials: true,
         });
         // console.log("🔄 Borrows:", res);
@@ -67,7 +67,7 @@ const UserProvider = ({ children }) => {
 
     const fetchBorrows = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/borrow/getAllBorrows", {
+        const res = await axios.get(`${apiUrl}/api/v1/borrow/getAllBorrows`, {
           withCredentials: true,
         });
         // console.log("🔄 Borrows:", res.data.borrows);
