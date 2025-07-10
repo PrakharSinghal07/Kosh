@@ -79,7 +79,7 @@ const Register = () => {
               value={registerData.password}
               onChange={handleInputChange}
             />
-            <button className="register-toggle-password" onClick={handleShowPassword}>
+            <button className="register-toggle-password" type="button" onClick={handleShowPassword}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
