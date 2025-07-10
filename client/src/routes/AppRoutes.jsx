@@ -13,12 +13,13 @@ import AddNewAdmin from '../pages/user/AddNewAdmin'
 import { AuthContext } from '../context/AuthContext'
 import Profile from '../pages/user/Profile'
 import ChangePassword from '../pages/user/ChangePassword'
+import LandingPage from '../pages/user/LandingPage'
 
 const AppRoutes = () => {
   const {user, isAdmin} = useContext(AuthContext);
   return (
     <Routes >
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<LandingPage />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/register/verify' element={<VerifyOTP />} />

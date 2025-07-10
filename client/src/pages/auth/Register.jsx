@@ -6,12 +6,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [loader, setLoader] = useState(false);
+  // const [loader, setLoader] = useState(false);
   const [registerData, setRegisterData] = useState({
     email: "",
     name: "",
     password: "",
   });
+  const [isWaiting, setIsWaiting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -25,18 +26,22 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    setLoader(true);
+    setIsWaiting(true);
+    setError("");
+    // setLoader(true);
     axios
       .post(`${apiUrl}/api/v1/auth/getRegistrationOTP`, registerData, {
         withCredentials: true,
       })
       .then((res) => {
-        setLoader(false);
-        setError(null);
+        setIsWaiting(false);
+        // setLoader(false);
+        setError("");
         navigate("/register/verify");
       })
       .catch((err) => {
-        setLoader(false);
+        setIsWaiting(false);
+        // setLoader(false);
         console.log(err.response?.data?.message || "Registration error");
         setError(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
@@ -76,9 +81,9 @@ const Register = () => {
             </button>
           </div>
           {error && <p className="error">{error}</p>}
-          {loader && <p className="loader">Please wait...</p>}
+          {/* {loader && <p className="loader">Please wait...</p>} */}
 
-          <button type="submit" className="register-button">
+          <button type="submit" className={`register-button ${isWaiting && "wait"}`}>
             Get OTP
           </button>
         </form>

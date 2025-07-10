@@ -12,6 +12,7 @@ const Login = () => {
   const { setUserContextUpdated } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [isWaiting, setIsWaiting] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -32,12 +33,13 @@ const Login = () => {
   };
   const handleLogin = (e) => {
     e.preventDefault();
-
+    setIsWaiting(true);
     axios
       .post(`${apiUrl}/api/v1/auth/login`, loginData, {
         withCredentials: true,
       })
       .then((response) => {
+        setIsWaiting(false);
         setRefreshAuthContext((prev) => !prev);
         setError(null);
         setLoginData({
@@ -48,6 +50,7 @@ const Login = () => {
         navigate("/dashboard");
       })
       .catch((err) => {
+        setIsWaiting(false);
         console.log(err.response.data.message);
         setError(err.response.data.message);
       });
@@ -85,7 +88,7 @@ const Login = () => {
             </button>
           </div>
           {error && <p className="error">{error}</p>}
-          <button type="submit" className="form-button">
+          <button type="submit" className={`form-button ${isWaiting && "wait"}`}>
             Login
           </button>
         </form>

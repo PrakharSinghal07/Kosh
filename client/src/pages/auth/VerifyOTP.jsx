@@ -8,6 +8,7 @@ const VerifyOTP = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { registerData, setRefreshAuthContext } = useContext(AuthContext);
   const [OTP, setOTP] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false);
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     setOTP(e.target.value);
@@ -15,6 +16,7 @@ const VerifyOTP = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
+    setIsWaiting(true);
     axios
       .post(
         `${apiUrl}/api/v1/auth/verifyRegistrationOTP`,
@@ -25,11 +27,13 @@ const VerifyOTP = () => {
       )
       .then((res) => {
         if (res.data.success === true) {
+          setIsWaiting(false);
           setRefreshAuthContext((prev) => !prev);
           navigate("/dashboard");
         }
       })
       .catch((err) => {
+        setIsWaiting(false);
         console.log(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
         }
@@ -45,7 +49,7 @@ const VerifyOTP = () => {
         </div>
         <form className="register-form" onSubmit={handleRegister}>
           <input type="number" className="register-input" value={OTP} name="OTP" onChange={handleInputChange} />
-          <button type="submit" className="register-button">
+          <button type="submit" className={`register-button ${isWaiting && "wait"}`}>
             Verify OTP
           </button>
         </form>

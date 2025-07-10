@@ -144,6 +144,11 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.wait{
+  background: linear-gradient(90deg, #9fa8da, #7986cb);
+
+}
+
 .register-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(63, 81, 181, 0.3);
