@@ -42,7 +42,11 @@ connectDB().then(() => {
     console.log(`Server started on PORT ${process.env.PORT}`);
   });
 });
-
+app.get("ping", (req, res) => {
+  return res.status(200).json({
+    message: "pong",
+  });
+});
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/borrow", borrowRouter);
