@@ -48,7 +48,7 @@ const VerifyOTP = () => {
           <p className="register-message">Verify your OTP below</p>
         </div>
         <form className="register-form" onSubmit={handleRegister}>
-          <input type="number" className="register-input" value={OTP} name="OTP" onChange={handleInputChange} />
+          <input type="number" className="register-input" value={OTP} name="OTP" autoFocus onChange={handleInputChange} />
           <button type="submit" className={`register-button ${isWaiting && "wait"}`}>
             Verify OTP
           </button>

@@ -62,7 +62,7 @@ const AddNewAdmin = () => {
         <form className="admin-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name</label>
-            <input name="name" type="text" value={data.name} onChange={handleChange} placeholder="Enter full name" required />
+            <input name="name" autoFocus type="text" value={data.name} onChange={handleChange} placeholder="Enter full name" required />
           </div>
 
           <div className="form-group">

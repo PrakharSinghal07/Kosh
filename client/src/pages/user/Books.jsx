@@ -111,7 +111,7 @@ const Books = () => {
                 <div className="books-modal">
                   <h3>Add Book</h3>
                   <form onSubmit={handleCreateNewBook}>
-                    <input type="text" name="title" required placeholder="Title" onChange={handleAddBookInputChange} />
+                    <input type="text" autoFocus name="title" required placeholder="Title" onChange={handleAddBookInputChange} />
                     <input type="text" name="author" required placeholder="Author" onChange={handleAddBookInputChange} />
                     <textarea name="description" required placeholder="Description" onChange={handleAddBookInputChange} />
                     <input type="number" name="price" required placeholder="Price" onChange={handleAddBookInputChange} />
@@ -228,6 +228,7 @@ const Books = () => {
               <input
                 type="email"
                 placeholder="User email"
+                autoFocus
                 value={email}
                 onChange={(e) => {
                   setMessage("");

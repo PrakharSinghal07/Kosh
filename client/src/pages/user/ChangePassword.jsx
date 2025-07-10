@@ -111,6 +111,7 @@ const ChangePassword = () => {
                   <input
                     type={showPasswords.current ? "text" : "password"}
                     required
+                    autoFocus
                     name="currentPassword"
                     id="currentPassword"
                     placeholder="Enter current password"
@@ -132,6 +133,7 @@ const ChangePassword = () => {
                     <input
                       type={showPasswords.new ? "text" : "password"}
                       required
+                      autoFocus
                       name="newPassword"
                       id="newPassword"
                       placeholder="Enter new password"

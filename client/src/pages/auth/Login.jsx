@@ -71,7 +71,7 @@ const Login = () => {
           <p className="login-message">Please provide your info to Login</p>
         </div>
         <form className="login-form" onSubmit={handleLogin}>
-          <input type="email" required name="email" id="email" className="form-input" placeholder="Email" value={loginData.email} onChange={handleInputChange} />
+          <input type="email" required autoFocus name="email" id="email" className="form-input" placeholder="Email" value={loginData.email} onChange={handleInputChange} />
           <div className="password-wrapper">
             <input
               type={!showPassword ? "password" : "text"}

@@ -63,7 +63,7 @@ const Register = () => {
           <p className="register-message">Create your account below</p>
         </div>
         <form className="register-form" onSubmit={handleRegister}>
-          <input type="email" name="email" className="register-input" placeholder="Email" required value={registerData.email} onChange={handleInputChange} />
+          <input type="email" autoFocus name="email" className="register-input" placeholder="Email" required value={registerData.email} onChange={handleInputChange} />
           <input type="text" name="name" className="register-input" placeholder="Name" required value={registerData.name} onChange={handleInputChange} />
 
           <div className="register-password-wrapper">
