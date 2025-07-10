@@ -3,15 +3,18 @@ import "./Register.css";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const Register = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   // const [loader, setLoader] = useState(false);
-  const [registerData, setRegisterData] = useState({
-    email: "",
-    name: "",
-    password: "",
-  });
+  const {registerData, setRegisterData} = useContext(AuthContext);
+  // const [registerData, setRegisterData] = useState({
+  //   email: "",
+  //   name: "",
+  //   password: "",
+  // });
   const [isWaiting, setIsWaiting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
