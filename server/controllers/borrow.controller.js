@@ -117,7 +117,7 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
-  // Step 1: Populate borrowedBooks > borrowId > book
+
   const user = await req.user.populate({
     path: "borrowedBooks.borrowId",
     populate: { path: "book" },
@@ -139,7 +139,6 @@ export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
     };
   });
 
-  // Step 3: Send response
   res.status(200).json({
     success: true,
     borrowedBooks,
@@ -147,10 +146,8 @@ export const getBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getBorrowedBooksForAdmin = catchAsyncErrors(async (req, res, next) => {
-  // Step 1: Populate borrowedBooks > borrowId > book
+  
   const borrows = await Borrow.find({}).populate("user").populate("book");
-
-  // Step 3: Send response
   res.status(200).json({
     success: true,
     borrows,

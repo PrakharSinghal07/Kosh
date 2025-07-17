@@ -53,7 +53,7 @@ const Catalog = () => {
         setReturnBorrow(null);
       }, 10000);
       setReturnModal(false);
-      // setReturnBorrow(null);
+      
       console.log(returnBorrow);
       setError("");
     } catch (err) {

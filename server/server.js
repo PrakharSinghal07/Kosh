@@ -8,6 +8,8 @@ import bookRouter from "./routers/book.router.js";
 import authRouter from "./routers/auth.router.js";
 import borrowRouter from "./routers/borrow.router.js";
 import userRouter from "./routers/user.router.js";
+import assetRouter from "./routers/asset.router.js";
+import assetAssignmentRouter from "./routers/assignAsset.router.js";
 import { v2 as cloudinary } from "cloudinary";
 import expressFileUpload from "express-fileupload";
 import { deleteUnverifiedUsers } from "./services/deleteUnverifiedUsers.js";
@@ -51,5 +53,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/borrow", borrowRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/asset", assetRouter);
+app.use("/api/v1/assignAsset", assetAssignmentRouter);
 
 app.use(errorMiddleware);

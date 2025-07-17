@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     })
     .catch((err) => {
       if (err.response?.status === 401) {
-        // User is not logged in
+        
         setUser(null);
         setIsAuthenticated(false);
       } else {

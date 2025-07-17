@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -36,11 +36,35 @@ const userSchema = new mongoose.Schema(
           type: Boolean,
           default: false,
         },
-        // bookTitle: String,
-        // borrowedDate: Date,
-        // dueDate: Date,
       },
     ],
+    assignedAssets: [
+      {
+        assignmentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Assignment",
+        },
+        returned: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    department: {
+      type: String,
+      trim: true,
+      default: "General",
+    },
+    designation: {
+      type: String,
+      trim: true,
+      default: "Employee",
+    },
+    onboarded: {
+      type: Boolean,
+      default: false,
+    },
+
     avatar: {
       public_id: String,
       url: String,
@@ -76,10 +100,10 @@ userSchema.methods.generateVerificationCode = function () {
   return verificationCode;
 };
 
-userSchema.methods.generateToken = function(){
-  return jwt.sign({id: this._id}, process.env.JWT_SECRET_KEY, {
+userSchema.methods.generateToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRE,
-  })
-}
+  });
+};
 
 export const User = mongoose.model("User", userSchema);

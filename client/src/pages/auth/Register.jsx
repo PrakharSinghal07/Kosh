@@ -8,13 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Register = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  // const [loader, setLoader] = useState(false);
   const {registerData, setRegisterData} = useContext(AuthContext);
-  // const [registerData, setRegisterData] = useState({
-  //   email: "",
-  //   name: "",
-  //   password: "",
-  // });
   const [isWaiting, setIsWaiting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
@@ -31,20 +25,18 @@ const Register = () => {
     e.preventDefault();
     setIsWaiting(true);
     setError("");
-    // setLoader(true);
     axios
       .post(`${apiUrl}/api/v1/auth/getRegistrationOTP`, registerData, {
         withCredentials: true,
       })
       .then((res) => {
         setIsWaiting(false);
-        // setLoader(false);
         setError("");
         navigate("/register/verify");
       })
       .catch((err) => {
         setIsWaiting(false);
-        // setLoader(false);
+
         console.log(err.response?.data?.message || "Registration error");
         setError(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
@@ -84,7 +76,7 @@ const Register = () => {
             </button>
           </div>
           {error && <p className="error">{error}</p>}
-          {/* {loader && <p className="loader">Please wait...</p>} */}
+          
 
           <button type="submit" className={`register-button ${isWaiting && "wait"}`}>
             Get OTP
