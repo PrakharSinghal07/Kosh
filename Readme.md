@@ -122,8 +122,8 @@ By unifying these systems, **Kosh** reduces administrative overhead, enhances th
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/kosh-platform.git
-cd kosh-platform
+git clone https://github.com/your-username/kosh.git
+cd kosh
 ```
 
 ### Setup Backend:
