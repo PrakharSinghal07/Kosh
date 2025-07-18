@@ -1,7 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/error.middleware.js";
 import { Asset } from "../models/asset.model.js";
-import { Assignment } from "../models/AssetAssignment.model.js";
+import { Assignment } from "../models/assetAssignment.model.js";
 import { RepairLog } from "../models/repairLog.model.js";
 import { User } from "../models/user.model.js";
 export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => {
