@@ -6,7 +6,6 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { sendToken } from "../utils/sendToken.js";
 import { checkInvalidOrExpiredOTP } from "../utils/checkInvalidorExpiredOTP.js";
 import { verifyandProcessOTP } from "../utils/verifyandProcessOTP.js";
-
 export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -28,9 +27,7 @@ export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
     if (password.length < 8 || password.length >= 20) {
       return next(new ErrorHandler("Password is not of appropriate length", 400));
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -47,7 +44,6 @@ export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
     next(err);
   }
 });
-
 export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
   const { email, otp } = req.body;
   try {
@@ -57,7 +53,6 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
     return next(err);
   }
 });
-
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -72,7 +67,6 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (!isPasswordMatched) return next(new ErrorHandler("Invalid password", 400));
   sendToken(user, 200, "User login successfully", res);
 });
-
 export const logout = catchAsyncErrors(async (req, res, next) => {
   res
     .status(200)
@@ -87,14 +81,12 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
       message: "Logged out successfully",
     });
 });
-
 export const getUser = catchAsyncErrors(async (req, res, next) => {
   const user = req.user;
   res.status(200).json({
     user,
   });
 });
-
 export const sendPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => {
   const { email, currentPassword } = req.body;
   try {
@@ -105,7 +97,6 @@ export const sendPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => 
     if (!user) {
       return next(new ErrorHandler("User is not authenticated", 400));
     }
-    console.log(currentPassword, user);
     const currentPass = await bcrypt.compare(currentPassword, user.password);
     if (!currentPass) {
       return next(new ErrorHandler("The entered password is incorrect", 400));
@@ -125,7 +116,6 @@ export const sendPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => 
     next(err);
   }
 });
-
 export const verifyPasswordChangeOTP = catchAsyncErrors(async (req, res, next) => {
   try {
     const { email, otp, password } = req.body;
@@ -143,4 +133,34 @@ export const verifyPasswordChangeOTP = catchAsyncErrors(async (req, res, next) =
   } catch (err) {
     return next(err);
   }
+});
+
+export const requestPasswordReset = catchAsyncErrors(async (req, res, next) => {
+  const { email } = req.body;
+  
+  if (!email) {
+    return next(new ErrorHandler("Email is required", 400));
+  }
+  
+  const user = await User.findOne({ email, accountVerified: true });
+  
+  if (!user) {
+    return res.status(200).json({
+      success: true,
+      message: "If an account exists with this email, a password reset OTP has been sent."
+    });
+  }
+  
+  if (user.verificationCode && user.verificationCodeExpired > Date.now()) {
+    return next(new ErrorHandler("An OTP has already been sent. Please check your email.", 400));
+  }
+  const verificationCode = await user.generateVerificationCode();
+  await user.save();
+  const subject = "Password Reset Request - OTP Verification";
+  await sendVerificationCode(verificationCode, email, subject, next);
+  
+  res.status(200).json({
+    success: true,
+    message: "If an account exists with this email, a password reset OTP has been sent."
+  });
 });

@@ -21,6 +21,80 @@ const Books = () => {
   const [newBook, setNewBook] = useState({ availability: true });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      render: (text, record) => (
+        <div className="book-title-cell">
+          {record.coverImage ? (
+            <img src={record.coverImage} alt={record.title} className="book-cover-thumbnail" />
+          ) : (
+            <div className="book-cover-placeholder">
+              {record?.title?.[0]?.toUpperCase() || 'B'}
+            </div>
+          )}
+          <span>{text}</span>
+        </div>
+      ),
+    },
+    {
+      title: 'Author',
+      dataIndex: 'author',
+      key: 'author',
+      render: (text) => text || 'N/A',
+    },
+    {
+      title: 'ISBN',
+      dataIndex: 'isbn',
+      key: 'isbn',
+      render: (text) => text || 'N/A',
+    },
+    {
+      title: 'Available',
+      dataIndex: 'availability',
+      key: 'availability',
+      render: (isAvailable) => (
+        <span className={`status-badge ${isAvailable ? "available" : "unavailable"}`}>
+          {isAvailable ? 'Yes' : 'No'}
+        </span>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <div className="action-buttons">
+          <button 
+            onClick={() => handleViewDetails(record)}
+            className="action-btn view-btn"
+          >
+            <FaEye />
+          </button>
+          {isAdmin(user) && (
+            <>
+              <button 
+                onClick={() => handleEdit(record)}
+                className="action-btn edit-btn"
+              >
+                <FaEdit />
+              </button>
+              <button 
+                onClick={() => handleDelete(record)}
+                className="action-btn delete-btn"
+                disabled={!record?.availability}
+              >
+                <FaTrash />
+              </button>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
   useEffect(() => {
     setBooks(allBooks);
     setFilteredBooks(allBooks);
@@ -113,6 +187,7 @@ const Books = () => {
                   <form onSubmit={handleCreateNewBook}>
                     <input type="text" autoFocus name="title" required placeholder="Title" onChange={handleAddBookInputChange} />
                     <input type="text" name="author" required placeholder="Author" onChange={handleAddBookInputChange} />
+                    <input type="text" name="genre" required placeholder="Genre" onChange={handleAddBookInputChange} />
                     <textarea name="description" required placeholder="Description" onChange={handleAddBookInputChange} />
                     <input type="number" name="price" required placeholder="Price" onChange={handleAddBookInputChange} />
                     <input type="number" name="quantity" required placeholder="Quantity" onChange={handleAddBookInputChange} />
@@ -158,6 +233,7 @@ const Books = () => {
                 <tr>
                   <th>Title</th>
                   <th>Author</th>
+                  <th>Genre</th>
                   <th>Price</th>
                   {isAdmin(user) && <th>Quantity</th>}
                   <th>Available</th>
@@ -172,6 +248,7 @@ const Books = () => {
                       {book.title.length >= 25 && "..."}
                     </td>
                     <td>{book.author}</td>
+                    <td>{book.genre}</td>
                     <td>₹{book.price}</td>
                     {isAdmin(user) && <td>{book.quantity} left</td>}
                     <td>

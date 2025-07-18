@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import { AuthContext } from "../../context/AuthContext";
-
+import KoshLogo from "./KoshLogo";
 const Register = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const {registerData, setRegisterData} = useContext(AuthContext);
@@ -20,7 +20,6 @@ const Register = () => {
       [name]: value,
     }));
   };
-
   const handleRegister = (e) => {
     e.preventDefault();
     setIsWaiting(true);
@@ -36,7 +35,6 @@ const Register = () => {
       })
       .catch((err) => {
         setIsWaiting(false);
-
         console.log(err.response?.data?.message || "Registration error");
         setError(err.response?.data?.message || "Registration error");
         if (err.response?.data?.message === "Verification Code already sent") {
@@ -44,12 +42,10 @@ const Register = () => {
         }
       });
   };
-
   const handleShowPassword = (e) => {
     e.preventDefault();
     setShowPassword((prev) => !prev);
   };
-
   return (
     <div className="register-container">
       <div className="register-left">
@@ -60,7 +56,6 @@ const Register = () => {
         <form className="register-form" onSubmit={handleRegister}>
           <input type="email" autoFocus name="email" className="register-input" placeholder="Email" required value={registerData.email} onChange={handleInputChange} />
           <input type="text" name="name" className="register-input" placeholder="Name" required value={registerData.name} onChange={handleInputChange} />
-
           <div className="register-password-wrapper">
             <input
               type={showPassword ? "text" : "password"}
@@ -76,16 +71,13 @@ const Register = () => {
             </button>
           </div>
           {error && <p className="error">{error}</p>}
-          
-
           <button type="submit" className={`register-button ${isWaiting && "wait"}`}>
             Get OTP
           </button>
         </form>
       </div>
-
       <div className="register-right">
-        <h1 className="register-logo">📚 BookWorm</h1>
+      <h1 className="branding-logo"><KoshLogo /></h1>
         <p className="register-tagline">Already have an account?</p>
         <NavLink className="register-navlink" to="/login">
           Login
@@ -94,5 +86,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;

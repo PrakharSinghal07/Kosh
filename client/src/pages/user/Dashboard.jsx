@@ -1,277 +1,172 @@
-import React, { useContext, useEffect, useState } from "react";
-import "./Dashboard.css";
-import axios from "axios";
-import { AuthContext } from "../../context/AuthContext";
-import Sidebar from "../../components/layout/Sidebar";
-import { UserContext } from "../../context/UserContext";
-import borrowImg from "./borrow.png";
+import React, { useContext, useMemo } from 'react';
+import DateTimeDisplay from '../../components/common/DateTimeDisplay';
+import Sidebar from '../../components/layout/Sidebar';
+import { AuthContext } from '../../context/AuthContext';
+import { UserContext } from '../../context/UserContext';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Legend as PieLegend } from 'recharts';
+import { FaUsers, FaBook, FaExclamationTriangle, FaArrowRight, FaCheckCircle } from 'react-icons/fa';
+import './Dashboard.css';
+const StatCard = ({ icon, label, value, bgColor }) => (
+  <div className="stat-card-v2" style={{ backgroundColor: bgColor }}>
+    <div className="stat-icon-wrapper">{icon}</div>
+    <div className="stat-info">
+      <span className="stat-value">{value}</span>
+      <span className="stat-label">{label}</span>
+    </div>
+  </div>
+);
+const ChartContainer = ({ title, children }) => (
+  <div className="chart-container">
+    <h3 className="chart-title">{title}</h3>
+    {children}
+  </div>
+);
 const Dashboard = () => {
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-  const { isAdmin, user } = useContext(AuthContext);
-  const { allBooks, allUsers, borrows, userContextUpdated } = useContext(UserContext);
-  const [date, setDate] = useState();
-  const [time, setTime] = useState();
-  const [filterCondtion, setFilterCondition] = useState("None");
-  const [borrowedData, setBorrowedData] = useState(borrows);
-  const [dueBooks, setDueBooks] = useState([]);
-  const [overDueBooks, setOverDueBooks] = useState([]);
-  useEffect(() => {
-    setBorrowedData(borrows);
-    const dueBooks = borrows.filter((book) => !book.returnDate);
-    setDueBooks(dueBooks);
-    const overDue = borrows.filter((book) => !book.returnDate && new Date(book.dueDate) < new Date());
-    setOverDueBooks(overDue);
-  }, [borrows]);
-  const handleSearch = (e) => {
-    const search = e.target.value.toLowerCase();
-    if (!search) {
-      setBorrowedData(borrows);
-      return;
-    }
-    const filtered = [...borrows].filter((item) => item.book.title.toLowerCase().includes(search));
-    setBorrowedData(filtered);
-  };
-
-  const handleMenuChange = (e) => {
-    setFilterCondition(e.target.value);
-    if (e.target.value === "Newest") {
-      setBorrowedData([...borrows].sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate)));
-    } else if (e.target.value === "Oldest") {
-      setBorrowedData([...borrows].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)));
-    } else {
-      const sorted = [...borrows].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-      setBorrowedData(sorted);
-    }
-  };
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-
-      const formattedTime = now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
+  const { user, isAdmin } = useContext(AuthContext);
+  const { allBooks, allUsers, borrows } = useContext(UserContext);
+  const processedData = useMemo(() => {
+    const totalMembers = allUsers.length;
+    const totalOverdue = borrows.filter(b => !b.returnDate && new Date(b.dueDate) < new Date()).length;
+    const currentlyBorrowed = borrows.filter(b => !b.returnDate).length;
+    const booksRead = borrows.filter(b => b.returnDate).length;
+    const userOverdue = borrows.filter(b => !b.returnDate && new Date(b.dueDate) < new Date()).length;
+    let barChartData = [];
+    let pieChartData = [];
+    let userGenreChartData = [];
+    if (isAdmin(user)) {
+      const monthlyBorrows = Array(6).fill(0);
+      const monthLabels = [];
+      const today = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        monthLabels.push(d.toLocaleString('default', { month: 'short' }));
+      }
+      borrows.forEach(borrow => {
+        const borrowDate = new Date(borrow.borrowDate);
+        const monthDiff = (today.getFullYear() - borrowDate.getFullYear()) * 12 + (today.getMonth() - borrowDate.getMonth());
+        if (monthDiff >= 0 && monthDiff < 6) {
+          monthlyBorrows[5 - monthDiff]++;
+        }
       });
-
-      const formattedDate = `${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-
-      setDate(formattedTime); 
-      setTime(formattedDate); 
-    };
-
-    updateDateTime(); 
-
-    const intervalId = setInterval(updateDateTime, 30000); 
-
-    return () => clearInterval(intervalId);
-  }, []);
-
+      barChartData = monthLabels.map((name, index) => ({ name, borrows: monthlyBorrows[index] }));
+      const genreCounts = allBooks.reduce((acc, book) => {
+        const genre = book.genre || 'Uncategorized';
+        acc[genre] = (acc[genre] || 0) + 1;
+        return acc;
+      }, {});
+      pieChartData = Object.entries(genreCounts).map(([name, value]) => ({ name, value }));
+    } else {
+      const userGenreCounts = borrows.reduce((acc, borrow) => {
+        if (borrow.book) {
+          const genre = borrow.book.genre || 'Uncategorized';
+          acc[genre] = (acc[genre] || 0) + 1;
+        }
+        return acc;
+      }, {});
+      userGenreChartData = Object.entries(userGenreCounts).map(([name, value]) => ({ name, books: value }));
+    }
+    const recentBorrows = [...borrows]
+      .sort((a, b) => new Date(b.borrowDate) - new Date(a.borrowDate))
+      .slice(0, 5);
+    return { totalMembers, totalOverdue, currentlyBorrowed, booksRead, userOverdue, barChartData, pieChartData, recentBorrows, userGenreChartData };
+  }, [allBooks, allUsers, borrows]);
+  const PIE_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF4560'];
   return (
-    <>
-      <div className="dashboard-container">
-        <Sidebar />
-        <main className="main-content">
-          <header className="header">
-            <h2>Hi {user && user.name.charAt(0).toUpperCase() + user.name.slice(1)}</h2>
-            <div className="date-time-container">
-              <p className="date">{date}</p>
-              <p className="date">{time}</p>
+    <div className="dashboard-container-v2">
+      <Sidebar />
+      <main className="main-content-v2">
+        <header className="header-v2">
+          <div className="header-greeting">
+            <h1>Dashboard</h1>
+            <p>Welcome back, {user?.name || 'User'}!</p>
+          </div>
+          <DateTimeDisplay />
+        </header>
+        {}
+        <section className="stats-grid">
+          {isAdmin(user) ? (
+            <>
+              <StatCard icon={<FaUsers />} label="Total Members" value={processedData.totalMembers} bgColor="#e0f2fe" />
+              <StatCard icon={<FaBook />} label="Total Books" value={allBooks.length} bgColor="#dcfce7" />
+              <StatCard icon={<FaExclamationTriangle />} label="Overdue Books" value={processedData.totalOverdue} bgColor="#fee2e2" />
+            </>
+          ) : (
+            <>
+              <StatCard icon={<FaBook />} label="Currently Borrowed" value={processedData.currentlyBorrowed} bgColor="#e0f2fe" />
+              <StatCard icon={<FaExclamationTriangle />} label="Overdue Books" value={processedData.userOverdue} bgColor="#fee2e2" />
+              <StatCard icon={<FaCheckCircle />} label="Books Read" value={processedData.booksRead} bgColor="#dcfce7" />
+            </>
+          )}
+        </section>
+        {}
+        <section className="charts-grid">
+          {isAdmin(user) ? (
+            <>
+              <ChartContainer title="Monthly Borrowing Trends">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={processedData.barChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tickLine={false} axisLine={false} />
+                    <YAxis allowDecimals={false} tickLine={false} axisLine={false} />
+                    <Tooltip cursor={{fill: 'rgba(239, 246, 255, 0.5)'}} />
+                    <Legend iconType="circle" />
+                    <Bar dataKey="borrows" fill="#3b82f6" barSize={30} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+              <ChartContainer title="Book Genres">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={processedData.pieChartData} cx="50%" cy="50%" labelLine={false} outerRadius={100} fill="#8884d8" dataKey="value" nameKey="name">
+                      {processedData.pieChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <PieLegend layout="vertical" verticalAlign="middle" align="right" iconType="circle" />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </>
+          ) : (
+            <div className="full-width-chart">
+              <ChartContainer title="Your Reading Habits by Genre">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={processedData.userGenreChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tickLine={false} axisLine={false} />
+                    <YAxis allowDecimals={false} tickLine={false} axisLine={false} />
+                    <Tooltip cursor={{fill: 'rgba(239, 246, 255, 0.5)'}} />
+                    <Legend iconType="circle" />
+                    <Bar dataKey="books" fill="#8884d8" barSize={30} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
-          </header>
-
-          <section className="stats-cards">
-            {isAdmin(user) && (
-              <div className="stat-card">
-                <div>
-                  <p>Total Members</p>
-                  <p>{allUsers.length}</p>
-                  <p className="green">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                    </svg>
-                    16% this month
-                  </p>
+          )}
+        </section>
+        {}
+        <section className="recent-activity-section">
+          <div className="recent-activity-header">
+            <h3 className="recent-activity-title">Recent Borrows</h3>
+            <a href="/catalog" className="view-all-link">
+              View All <FaArrowRight />
+            </a>
+          </div>
+          <div className="recent-activity-list">
+            {processedData.recentBorrows.map(borrow => (
+              <div key={borrow?._id} className="activity-item">
+                <div className="activity-details">
+                  <span className="activity-book-title">{borrow?.book?.title || 'Unknown Book'}</span>
+                  {isAdmin(user) && <span className="activity-member-name">by {borrow?.user?.name || 'Unknown User'}</span>}
                 </div>
-                <div className="stat-card-icon green">
-                  <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path>
-                  </svg>
-                </div>
+                <span className="activity-date">{new Date(borrow?.borrowDate).toLocaleDateString()}</span>
               </div>
-            )}
-            {isAdmin(user) && <div className="stat-card">
-              <div>
-                <p>Checked out books</p>
-                <p>{borrowedData.length}</p>
-                <div className="active-avatars">
-                  <img src="https://placehold.co/32x32/A62A2A/ffffff?text=B1" alt="B1" />
-                  <img src="https://placehold.co/32x32/B32D2D/ffffff?text=B2" alt="B2" />
-                  <img src="https://placehold.co/32x32/C03030/ffffff?text=B3" alt="B3" />
-                  <img src="https://placehold.co/32x32/CC3333/ffffff?text=B4" alt="B4" />
-                </div>
-              </div>
-              <div className="stat-card-icon blue">
-                <img className="borrow-img" src={borrowImg} alt="" />
-              </div>
-            </div>}
-
-            {isAdmin(user) && <div className="stat-card">
-              <div>
-                <p>Total Books</p>
-                <p>{allBooks.length}</p>
-                <p className="red">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                  </svg>
-                  1% this month
-                </p>
-              </div>
-              <div className="stat-card-icon red">
-                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                  <path
-                    fillRule="evenodd"
-                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-            </div>}
-            {!isAdmin(user) && <div className="stat-card">
-              <div>
-                <p>Books Borrowed</p>
-                <p>{borrowedData.length}</p>
-                <div className="active-avatars">
-                  <img src="https://placehold.co/24x24/157caf/ffffff?text=R1" alt="Avatar" />
-                  <img src="https://placehold.co/24x24/157caf/ffffff?text=R2" alt="Avatar" />
-                  <img src="https://placehold.co/24x24/157caf/ffffff?text=R3" alt="Avatar" />
-                  <img src="https://placehold.co/24x24/157caf/ffffff?text=R4" alt="Avatar" />
-                </div>
-              </div>
-              <div className="stat-card-icon blue">
-                <img className="borrow-img" src={borrowImg} alt="" />
-                
-              </div>
-            </div>}
-            {!isAdmin(user) && <div className="stat-card">
-              <div>
-                <p>Books Due</p>
-                <p>{dueBooks.length}</p>
-                <div className="active-avatars">
-                  <img src="https://placehold.co/32x32/059669/ffffff?text=D1" alt="B1" />
-                  <img src="https://placehold.co/32x32/10b981/ffffff?text=D2" alt="B2" />
-                  <img src="https://placehold.co/32x32/34d399/ffffff?text=D3" alt="B3" />
-                  <img src="https://placehold.co/32x32/6ee7b7/ffffff?text=D4" alt="B4" />
-                </div>
-              </div>
-              <div className="stat-card-icon blue">
-                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                
-                  <path
-                    fillRule="evenodd"
-                    d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                
-              </div>
-            </div>}
-            {!isAdmin(user) && <div className="stat-card">
-              <div>
-                <p>Books Overdue</p>
-                <p>{overDueBooks.length}</p>
-                <div className="active-avatars">
-                  <img src="https://placehold.co/32x32/A62A2A/ffffff?text=B1" alt="B1" />
-                  <img src="https://placehold.co/32x32/B32D2D/ffffff?text=B2" alt="B2" />
-                  <img src="https://placehold.co/32x32/C03030/ffffff?text=B3" alt="B3" />
-                  <img src="https://placehold.co/32x32/CC3333/ffffff?text=B4" alt="B4" />
-                </div>
-              </div>
-              <div className="stat-card-icon red">
-                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                  <path
-                    fillRule="evenodd"
-                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                
-              </div>
-            </div>}
-          </section>
-
-          <section className="loans-section">
-            <div className="loans-header">
-              <h3>Issued Books</h3>
-              <div className="loans-controls">
-                <div className="search-input-container">
-                  <input type="text" placeholder="Search issued books..." className="search-input" onChange={handleSearch} />
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  </svg>
-                </div>
-                <div className="custom-select-wrapper">
-                  <select className="custom-select" defaultValue={"Oldest"} onChange={handleMenuChange}>
-                    <option>Newest</option>
-                    <option>Oldest</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="table-container">
-              <table className="loans-table">
-                <thead>
-                  <tr>
-                    {isAdmin(user) && <th>Member Name</th>}
-                    <th>Book Title</th>
-                    <th>Price</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {borrowedData.map((borrow, index) => (
-                    <tr key={index}>
-                      {isAdmin(user) && <td>{borrow?.user?.name}</td>}
-                      <td>{borrow?.book?.title?.slice(0, 25)}</td>
-                      <td>₹{borrow?.book?.price}</td>
-                      <td>{new Date(borrow?.dueDate).toLocaleDateString()}</td>
-                      <td>
-                        <span className={`status-badge ${borrow?.returnDate ? "active" : "overdue"}`}>{borrow?.returnDate ? "Returned" : "Due"}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* <div className="pagination">
-              <span>Showing data 1 to 8 of 500 loans</span>
-              <div className="pagination-controls">
-                <button className="pagination-button">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-                  </svg>
-                </button>
-                {[1, 2, 3, 4, "...", 25].map((page, index) => (
-                  <button key={index} className={`pagination-page-button ${page === 1 ? "active" : ""}`}>
-                    {page}
-                  </button>
-                ))}
-                <button className="pagination-button">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </button>
-              </div>
-            </div> */}
-          </section>
-        </main>
-      </div>
-    </>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 };
-
 export default Dashboard;

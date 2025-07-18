@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UserContext } from "../../context/UserContext";
-
+import KoshLogo from "./KoshLogo";
 const Login = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { setRefreshAuthContext } = useContext(AuthContext);
@@ -26,7 +26,6 @@ const Login = () => {
       [name]: value,
     }));
   };
-
   const handleShowPassword = (e) => {
     e.preventDefault();
     setShowPassword((prev) => !prev);
@@ -47,7 +46,7 @@ const Login = () => {
           password: "",
         });
         setUserContextUpdated((prev) => !prev);
-        navigate("/dashboard");
+        navigate("/home");
       })
       .catch((err) => {
         setIsWaiting(false);
@@ -58,13 +57,12 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-left">
-        <h1 className="branding-logo">📚 BookWorm</h1>
-        <p className="branding-tagline">Your smart library companion</p>
+        <h1 className="branding-logo"><KoshLogo /></h1>
+        <p className="branding-tagline">Create a new account</p>
         <NavLink className="navigate-to-register" to="/register">
           Register
         </NavLink>
       </div>
-
       <div className="auth-right">
         <div className="login-static-container">
           <div className="login-heading">Login</div>
@@ -88,6 +86,9 @@ const Login = () => {
             </button>
           </div>
           {error && <p className="error">{error}</p>}
+          <div className="forgot-password-link">
+            <NavLink to="/forgot-password">Forgot Password?</NavLink>
+          </div>
           <button type="submit" className={`form-button ${isWaiting && "wait"}`}>
             Login
           </button>
@@ -96,5 +97,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;

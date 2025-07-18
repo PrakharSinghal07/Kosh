@@ -1,16 +1,12 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-
 export const AuthContext = createContext();
-
 export const AuthProvider = ({ children }) => {
-
   const [registerData, setRegisterData] = useState({
     email: "",
     name: "",
     password: "",
   });
-
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [refreshAuthContext, setRefreshAuthContext] = useState(false);
@@ -28,12 +24,12 @@ export const AuthProvider = ({ children }) => {
         email: res.data.user.email,
         role: res.data.user.role,
         createdAt: res.data.user.createdAt,
+        id: res.data.user._id,
       });
       setIsAuthenticated(true);
     })
     .catch((err) => {
       if (err.response?.status === 401) {
-        
         setUser(null);
         setIsAuthenticated(false);
       } else {
@@ -44,10 +40,13 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 }, [refreshAuthContext]);
-
   const isAdmin = (user) => {
     return user?.role === "Admin";
   }
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -59,7 +58,8 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated,
         setRefreshAuthContext,
         loading,
-        isAdmin
+        isAdmin,
+        logout
       }}
     >
       {children}

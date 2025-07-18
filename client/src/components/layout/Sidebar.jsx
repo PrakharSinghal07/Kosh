@@ -1,108 +1,212 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { UserContext } from "../../context/UserContext";
-import { NavLink, useNavigate } from "react-router-dom";
+import { SystemContext } from "../../context/SystemContext";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import "./Sidebar.css";
+import { FaHome, FaBook, FaClipboardList, FaUsers, FaUserPlus, FaBox, FaTasks, FaTools, FaSignOutAlt, FaKey, FaTachometerAlt, FaLandmark } from 'react-icons/fa';
+import ConfirmationModal from '../common/ConfirmationModal';
+import axios from "axios";
+import KoshLogo from "../../pages/auth/KoshLogo";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const { user, isAdmin } = useContext(AuthContext);
-  const { activeLink, setActiveLink } = useContext(UserContext);
+  const location = useLocation();
+  const { user, isAdmin, logout } = useContext(AuthContext);
+  const { system, setSystem } = useContext(SystemContext);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/assets') || location.pathname.startsWith('/my-assets')) {
+      setSystem('asset');
+    } else if (
+      location.pathname.startsWith('/home') ||
+      location.pathname.startsWith('/books') ||
+      location.pathname.startsWith('/catalog') ||
+      location.pathname.startsWith('/users')
+    ) {
+      setSystem('library');
+    }
+    
+  }, [location.pathname, setSystem]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:8000/api/v1/auth/logout", { withCredentials: true });
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const libraryLinks = (
+    <>
+      <li>
+        <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <span><FaHome /></span>
+          <span>Home</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <span><FaHome /></span>
+          <span>Dashboard</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/books" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <span><FaBook /></span>
+          <span>Books</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/catalog" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <span><FaClipboardList /></span>
+          <span>Catalog</span>
+        </NavLink>
+      </li>
+      {isAdmin(user) && (
+        <li>
+          <NavLink to="/users" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            <span><FaUsers /></span>
+            <span>Users</span>
+          </NavLink>
+        </li>
+      )}
+      {isAdmin(user) && (
+        <li>
+          <NavLink to="/add-new-admin" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            <span><FaUserPlus /></span>
+            <span>Add New Admin</span>
+          </NavLink>
+        </li>
+      )}
+    </>
+  );
+
+  const assetLinks = (
+    <>
+      <li>
+        <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <span><FaHome /></span>
+          <span>Home</span>
+        </NavLink>
+      </li>
+      {isAdmin(user) ? (
+        <>
+          <li>
+            <NavLink to="/assets/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaTachometerAlt /></span>
+              <span>Dashboard</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/assets/list" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaBox /></span>
+              <span>Asset List</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/assets/assignments" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaTasks /></span>
+              <span>Assignments</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/assets/repairs" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaTools /></span>
+              <span>Repair Log</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/assets/users" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaUsers /></span>
+              <span>Users</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/assets/add-new-admin" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <span><FaUserPlus /></span>
+              <span>Add New Admin</span>
+            </NavLink>
+          </li>
+        </>
+      ) : (
+        <li>
+          <NavLink to="/my-assets" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            <span><FaBox /></span>
+            <span>My Assets</span>
+          </NavLink>
+        </li>
+      )}
+    </>
+  );
+
   return (
     <aside className="sidebar">
       <div>
         <div className="sidebar-logo">
-          <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 19V3h16v16a2 2 0 01-2 2H6a2 2 0 01-2-2zM6 5v14h12V5H6zm8 14H6v-2h8v2zm0-4H6v-2h8v2zm0-4H6V9h8v2zm0-4H6V5h8v2z" />
-          </svg>
-          <h1>LIBRARY</h1>
+          <FaLandmark />
+
+          <h1>{system === 'library' ? 'LIBRARY' : 'ASSETS'}</h1>
         </div>
         <nav>
           <ul className="nav-list">
-            <li>
-              <NavLink to="/dashboard" onClick={() => setActiveLink("Dashboard")} className={`nav-link ${activeLink === "Dashboard" ? "active" : ""}`}>
-                <span>
-                </span>
-                <span>{"Dashboard"}</span>
-                <span>
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/books" onClick={() => setActiveLink("Books")} className={`nav-link ${activeLink === "Books" ? "active" : ""}`}>
-                <span>
-                </span>
-                <span>{"Books"}</span>
-                <span>
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/catalog" onClick={() => setActiveLink("Catalog")} className={`nav-link ${activeLink === "Catalog" ? "active" : ""}`}>
-                <span>
-                </span>
-                <span>{"Catalog"}</span>
-                <span>
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/users" onClick={() => setActiveLink("Users")} className={`nav-link ${activeLink === "Users" ? "active" : ""}`}>
-                <span></span>
-                {isAdmin(user) && <span>Users</span>}
-                {isAdmin(user) && (
-                  <span>
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </span>
-                )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/add-new-admin" onClick={() => setActiveLink("addAdmin")} className={`nav-link ${activeLink === "addAdmin" ? "active" : ""}`}>
-                <span></span>
-                {isAdmin(user) && <span>{"Add New Admin"}</span>}
-                {isAdmin(user) && (
-                  <span>
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </span>
-                )}
-              </NavLink>
-            </li>
+            {system === 'asset' ? assetLinks : libraryLinks}
           </ul>
         </nav>
       </div>
 
-      <div
-        className="user-profile"
-        onClick={() => {
-          navigate("/profile");
-          setActiveLink("");
-        }}
-        style={{
-          "cursor": "pointer"
-        }}
-      >
-        <img src={`https://placehold.co/40x40/cccccc/ffffff?text=${user && user.name.charAt(0).toUpperCase()}`} alt="Evano" />
-        <div>
-          <p>{user && user.name.charAt(0).toUpperCase() + user.name.slice(1)}</p>
-          <p>{user && user.role}</p>
+      <div className="user-profile-container" ref={profileRef}>
+        {isProfileOpen && (
+          <div className="profile-dropdown">
+            <NavLink to={`/user/${user?.id}`} className="dropdown-item">
+              <FaUserPlus /> Profile
+            </NavLink>
+            <NavLink to="/change-password" className="dropdown-item">
+              <FaKey /> Change Password
+            </NavLink>
+            <button onClick={() => setLogoutModalOpen(true)} className="dropdown-item logout-button">
+              <FaSignOutAlt /> Logout
+            </button>
+          </div>
+        )}
+        <div
+          className="user-profile"
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+        >
+          <div className="user-avatar-initials">{user?.name.charAt(0).toUpperCase()}</div>
+          <div className="user-info">
+            <p className="user-name-sidebar">{user?.name}</p>
+            <p className="user-role-sidebar">{user?.role}</p>
+          </div>
+          <svg className={`chevron-icon ${isProfileOpen ? 'open' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path transform="rotate(-90 12 12)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
       </div>
+
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to log out?"
+      />
     </aside>
   );
 };
