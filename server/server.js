@@ -26,7 +26,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: ["https://kosh-erp.netlify.app/", "http://localhost:5173"],
+    origin: ["https://kosh-erp.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
