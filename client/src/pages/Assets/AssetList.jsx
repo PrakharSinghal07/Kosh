@@ -353,6 +353,7 @@ const AssetList = () => {
 
   return (
     <div className="books-container">
+      
       <Sidebar />
       <main className="books-main-content">
         <header className="books-header">

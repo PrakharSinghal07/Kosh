@@ -23,7 +23,7 @@ function LandingPage() {
           </svg>
           <div className={styles.wave}></div>
         </div>
-        <button className={styles.getStartedButton} onClick={() => { isAuthenticated ? navigate("/dashboard") : navigate("/register") }}>Register</button>
+        <button className={styles.getStartedButton} onClick={() => { isAuthenticated ? navigate("/home") : navigate("/register") }}>Register</button>
       </header>
       <main className={styles.mainContent}>
         <div className={styles.textSection}>
@@ -33,7 +33,7 @@ function LandingPage() {
           <p className={styles.description}>
             Kosh provides two powerful systems in one platform. Manage your corporate library with ease while simultaneously tracking every physical asset in your inventory. Simple, powerful, and built to scale.
           </p>
-          <button className={styles.readMoreButton} onClick={() => { isAuthenticated ? navigate("/dashboard") : navigate("/login") }}>Get Started</button>
+          <button className={styles.readMoreButton} onClick={() => { isAuthenticated ? navigate("/home") : navigate("/login") }}>Get Started</button>
         </div>
         <div className={styles.illustrationSection}>
           <img src={illustration} alt="Online Library Illustration" className={styles.illustrationImage} />

@@ -45,9 +45,8 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8000/api/v1/auth/logout", { withCredentials: true });
-      logout();
-      navigate("/login");
+      await logout();
+      // navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
     }

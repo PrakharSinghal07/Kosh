@@ -5,39 +5,57 @@ const AssetDetailsModal = ({ selectedAsset, setActiveModal }) => {
   if (!selectedAsset) return null;
 
   return (
-    <div className="books-modal-overlay">
-      <div className="books-modal details-modal">
-        <h3 className="modal-title">{selectedAsset.assetName}</h3>
+    <div className="modal-overlay" onClick={() => setActiveModal(null)}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        
+        <header className="modal-header">
+          <h2 className="modal-title">{selectedAsset.assetName}</h2>
+          <button className="modal-close-btnn" onClick={() => setActiveModal(null)} aria-label="Close">
+            &times;
+          </button>
+        </header>
 
-        <div className="details-grid">
-          <Detail label="Category" value={selectedAsset.assetCategory} color="purple" />
-          <Detail label="Serial Number" value={selectedAsset.serialNumber} color="blue" />
-          <Detail label="Status" value={selectedAsset.status} color="green" />
-          {selectedAsset.status === 'Assigned' && selectedAsset.assignedTo && (
-            <Detail label="Assigned To" value={selectedAsset.assignedTo.name} color="blue" />
-          )}
-          <Detail label="Cost" value={selectedAsset.cost ? `₹${selectedAsset.cost}` : 'N/A'} color="teal" />
-          <Detail label="Purchase Date" value={formatDate(selectedAsset.purchaseDate)} color="orange" />
-          <Detail label="Warranty Expiry" value={formatDate(selectedAsset.warrantyExpiry)} color="red" />
-          <div className="detail-item full-width">
-            <span className="detail-label">Description</span>
-            <p className="detail-description">{selectedAsset.assetDescription || 'No description provided.'}</p>
+        <main className="modal-body">
+          <div className="details-container">
+            <DetailRow label="Status" value={selectedAsset.status} type="status" />
+            <DetailRow label="Category" value={selectedAsset.assetCategory} />
+            <DetailRow label="Serial Number" value={selectedAsset.serialNumber} />
+            {selectedAsset.status === 'Assigned' && selectedAsset.assignedTo && (
+              <DetailRow label="Assigned To" value={selectedAsset.assignedTo.name} />
+            )}
+            <DetailRow label="Cost" value={selectedAsset.cost ? `₹${selectedAsset.cost.toLocaleString('en-IN')}` : 'N/A'} />
+            <DetailRow label="Purchase Date" value={formatDate(selectedAsset.purchaseDate)} />
+            <DetailRow label="Warranty Expiry" value={formatDate(selectedAsset.warrantyExpiry)} />
+            <div className="detail-row full-width">
+              <span className="detail-label">Description</span>
+              <p className="detail-value-description">
+                {selectedAsset.assetDescription || 'No description has been provided.'}
+              </p>
+            </div>
           </div>
-        </div>
+        </main>
 
-
-        <div className="modal-footer">
-          <button className="close-btn" onClick={() => setActiveModal(null)}>Close</button>
-        </div>
+        <footer className="modal-footer">
+          <button className="btn btn-secondary" onClick={() => setActiveModal(null)}>
+            Close
+          </button>
+        </footer>
+        
       </div>
     </div>
   );
 };
 
-const Detail = ({ label, value, color }) => (
-  <div className="detail-item">
+const DetailRow = ({ label, value, type }) => (
+  <div className="detail-row">
     <span className="detail-label">{label}</span>
-    <span className={`detail-value color-${color}`}>{value}</span>
+    {type === 'status' ? (
+      <span>
+        {value}
+      </span>
+    ) : (
+      <span className="detail-value">{value}</span>
+    )}
   </div>
 );
 

@@ -888,3 +888,15 @@
   padding-top: 0.75rem;
   margin-top: 1rem;
 }
+
+
+@media (max-width: 640px) {
+  /* You can hide less critical columns to improve readability. */
+  /* To use this, you would need to add the corresponding class to the th/td in your JSX. */
+  .hide-on-mobile {
+      display: none;
+  }
+}
+
+
+  

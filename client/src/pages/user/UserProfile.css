@@ -116,6 +116,7 @@
   gap: 0.5rem;
   font-weight: 600;
   color: #2d3748;
+  width: 180px;
   flex-shrink: 0;
 }
 .detail-value {

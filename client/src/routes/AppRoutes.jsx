@@ -25,10 +25,14 @@ import { AuthContext } from "../context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import NotFound from "../pages/user/NotFound";
 const AppRoutes = () => {
-  const { user, isAdmin } = useContext(AuthContext);
+  const { user, isAdmin, loading } = useContext(AuthContext);
 
-  if (user === null || user === undefined) {
-    return <Loader />;
+  if (loading) {
+    return (
+      <div className="full-page-loader">
+        <Loader />
+      </div>
+    );
   }
 
   return (

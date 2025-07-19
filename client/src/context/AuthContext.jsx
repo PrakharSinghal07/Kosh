@@ -43,9 +43,16 @@ export const AuthProvider = ({ children }) => {
   const isAdmin = (user) => {
     return user?.role === "Admin";
   }
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await axios.post(`${apiUrl}/api/v1/auth/logout`, {}, { withCredentials: true });
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+      window.location.href = '/login';
+    }
   };
   return (
     <AuthContext.Provider
