@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import Sidebar from '../../components/layout/Sidebar';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
-import '../user/Books.css'; 
-import './Assignments.css'; 
+import '../user/Books.css';
+import './Assignments.css';
 import Loader from '../../components/common/Loader';
+import AssignmentDetailsModal from '../../components/common/AssignmentDetailsModal';
 const Assignments = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { user } = useContext(AuthContext);
@@ -44,8 +45,8 @@ const Assignments = () => {
   const handleReturnAsset = (serialNumber) => {
     axios.post(`${apiUrl}/api/v1/assignAsset/recordAssetReturn/${serialNumber}`, {}, { withCredentials: true })
       .then(res => {
-        fetchAssignments(); 
-        setShowDetailsModal(false); 
+        fetchAssignments();
+        setShowDetailsModal(false);
       })
       .catch(err => {
         console.error("Error returning asset:", err);
@@ -103,45 +104,13 @@ const Assignments = () => {
           )}
         </section>
         {showDetailsModal && selectedAssignment && (
-          <div className="books-modal-overlay">
-            <div className="books-modal assignment-details-modal">
-              <h3>Assignment Details</h3>
-              <div className="details-section">
-                <h4>Asset Information</h4>
-                <p><strong>Name:</strong> {selectedAssignment?.assetId?.assetName}</p>
-                <p><strong>Serial:</strong> {selectedAssignment?.assetId?.serialNumber}</p>
-                <p><strong>Category:</strong> {selectedAssignment?.assetId?.assetCategory}</p>
-              </div>
-              <div className="details-section">
-                <h4>User Information</h4>
-                <p><strong>Name:</strong> {selectedAssignment?.userId?.name}</p>
-                <p><strong>Email:</strong> {selectedAssignment?.userId?.email}</p>
-              </div>
-              <div className="details-section">
-                <h4>Assignment Timeline</h4>
-                <p><strong>Assigned On:</strong> {new Date(selectedAssignment?.assignedDate).toLocaleDateString()}</p>
-                <p><strong>Status:</strong> {selectedAssignment?.status}</p>
-                {selectedAssignment?.returnDate && (
-                  <p><strong>Returned On:</strong> {new Date(selectedAssignment?.returnDate).toLocaleDateString()}</p>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="cancel" onClick={() => setShowDetailsModal(false)}>
-                  Close
-                </button>
-                {selectedAssignment?.status !== 'Returned' && (
-                  <button 
-                    type="button" 
-                    className="save-btn" 
-                    onClick={() => handleReturnAsset(selectedAssignment?.assetId?.serialNumber)}
-                  >
-                    Mark as Returned
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+          <AssignmentDetailsModal
+            selectedAssignment={selectedAssignment}
+            onClose={() => setShowDetailsModal(false)}
+            onMarkReturned={handleReturnAsset}
+          />
         )}
+
       </main>
     </div>
   );

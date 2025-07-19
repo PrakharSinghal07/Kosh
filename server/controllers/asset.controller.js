@@ -5,7 +5,7 @@ import { Assignment } from "../models/assetAssignment.model.js";
 import { RepairLog } from "../models/repairLog.model.js";
 import { User } from "../models/user.model.js";
 export const getAllAssets = catchAsyncErrors(async (req, res, next) => {
-  const assets = await Asset.find({});
+  const assets = await Asset.find({}).populate({ path: "assignedTo" });
   return res.json({ assets: assets });
 });
 export const createNewAsset = catchAsyncErrors(async (req, res, next) => {

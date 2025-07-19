@@ -98,3 +98,33 @@
   background-color: #dc2626; 
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
+
+
+
+.gg {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #4b5563;
+  outline: none;
+}
+
+.modal-close-btnn-container {
+  position: relative;
+}
+.modal-close-btnn {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  z-index: 10;
+}

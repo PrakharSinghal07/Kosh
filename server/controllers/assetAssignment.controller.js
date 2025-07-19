@@ -55,6 +55,7 @@ export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => 
       assignmentId: assignment._id,
       assetId: asset._id,
       userId: user._id,
+      asset,
     },
   });
 });
