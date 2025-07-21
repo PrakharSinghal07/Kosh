@@ -6,6 +6,16 @@ import '../user/Books.css';
 import './Assignments.css';
 import Loader from '../../components/common/Loader';
 import AssignmentDetailsModal from '../../components/common/AssignmentDetailsModal';
+import { FaCalendarAlt, FaBoxOpen, FaUserAlt, FaUser } from 'react-icons/fa';
+
+// Helper function to get initials from a name
+const getInitials = (name) => {
+  if (!name) return '??';
+  const nameParts = name.trim().split(/\s+/);
+  if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
+  return `${nameParts[0].charAt(0)}${nameParts[nameParts.length - 1].charAt(0)}`.toUpperCase();
+};
+
 const Assignments = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { user } = useContext(AuthContext);
@@ -16,9 +26,11 @@ const Assignments = () => {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     fetchAssignments();
   }, []);
+
   useEffect(() => {
     const lowercasedFilter = searchTerm.toLowerCase();
     const filteredData = assignments.filter(item => {
@@ -29,6 +41,7 @@ const Assignments = () => {
     });
     setFilteredAssignments(filteredData);
   }, [searchTerm, assignments]);
+
   const fetchAssignments = () => {
     setLoading(true);
     axios.get(`${apiUrl}/api/v1/assignAsset/getAllAssignments`, { withCredentials: true })
@@ -42,6 +55,7 @@ const Assignments = () => {
         setLoading(false);
       });
   };
+
   const handleReturnAsset = (serialNumber) => {
     axios.post(`${apiUrl}/api/v1/assignAsset/recordAssetReturn/${serialNumber}`, {}, { withCredentials: true })
       .then(res => {
@@ -53,10 +67,12 @@ const Assignments = () => {
         setError(err.response?.data?.message || 'Failed to return asset.');
       });
   };
+
   const handleShowDetailsModal = (assignment) => {
     setSelectedAssignment(assignment);
     setShowDetailsModal(true);
   };
+
   if (loading) {
     return (
       <div className="books-container">
@@ -67,6 +83,7 @@ const Assignments = () => {
       </div>
     );
   }
+
   return (
     <div className="books-container">
       <Sidebar />
@@ -84,20 +101,76 @@ const Assignments = () => {
           </div>
         </header>
         {error && <p className="error">{error}</p>}
-        <section className="assignments-section">
+        <section className="assignments-timeline-section">
           {filteredAssignments.length > 0 ? (
-            <div className="assignments-grid">
-              {filteredAssignments.map((item) => (
-                <div key={item._id} className="assignment-card" onClick={() => handleShowDetailsModal(item)}>
-                  <div className="card-header">
-                    <h4 className="asset-name">{item.assetId.assetName}</h4>
+            <div className="assignments-timeline">
+              {filteredAssignments.reverse().map((item, index) => {
+                console.log(item)
+                const status = item.returned;
+                const statusClass = ((status=="Returned") ? 'returned' : 'assigned');
+                
+                return (
+                  <div 
+                    key={item._id} 
+                    className={`assignment-timeline-item assignment-status-${statusClass}`}
+                    onClick={() => handleShowDetailsModal(item)}
+                  >
+                    <div className="assignment-timeline-dot">
+                      {status=="Returned" ? (
+                        <FaBoxOpen className="assignment-timeline-icon" />
+                      ) : (
+                        <span className="assignment-user-initials">
+                          {getInitials(item.userId?.name)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="assignment-timeline-content">
+                      <div className="assignment-timeline-header">
+                        <h4 className="assignment-asset-name">{item.assetId?.assetName || 'Unknown Asset'}</h4>
+                        <span className={`status-badge ${item.status.toLowerCase()}`}>
+                          {item.status}
+                        </span>
+                      </div>
+                      <p className="assignment-serial-number">S/N: {item.assetId?.serialNumber || 'N/A'}</p>
+                      <div className="assignment-details">
+                        <p>
+                          <FaUser className="assignment-detail-icon" />
+                          <span className="assignment-detail-label">Assigned To:</span>
+                          <span className="assignment-detail-value">{item.userId?.name || 'Unassigned'}</span>
+                        </p>
+                        <p>
+                          <FaCalendarAlt className="assignment-detail-icon" />
+                          <span className="assignment-detail-label">Assigned On:</span>
+                          <span className="assignment-detail-value">
+                            {item.assignedDate ? new Date(item.assignedDate).toLocaleDateString('en-IN', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) : 'N/A'}
+                          </span>
+                        </p>
+                        {status=="Returned" && item.returnDate && (
+                          <p>
+                            <FaCalendarAlt className="assignment-detail-icon" />
+                            <span className="assignment-detail-label">Returned On:</span>
+                            <span className="assignment-detail-value">
+                              {new Date(item.returnDate).toLocaleDateString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="card-body">
-                    <p className="user-info">Assigned to: <strong>{item.userId.name}</strong></p>
-                    <p className="date-info">On: {new Date(item.assignedDate).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="no-assignments-message">No assignments found matching your search.</p>

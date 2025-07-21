@@ -42,7 +42,7 @@ const AssetTable = ({
                 {asset?.status}
               </span>
             </td>
-            <td>{new Date(asset?.purchaseDate).toLocaleDateString()}</td>
+            <td>{new Date(asset?.purchaseDate).toLocaleDateString('en-IN')}</td>
             <td className="books-actions">
               <button onClick={() => handleShowEditModal(asset)} className="details-btn">Update</button>
               <div className="actions-dropdown-container">

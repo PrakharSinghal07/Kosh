@@ -83,9 +83,10 @@ const UserProfile = () => {
           <div className="detail-card full-width">
             <h4><FaClock /> Activity Timeline</h4>
             <div className="card-content">
-              <p><span className="detail-label"><FaCalendarAlt /> Joined On:</span><span className="detail-value">{new Date(user?.createdAt).toLocaleString()}</span></p>
-              <p><span className="detail-label"><FaCalendarAlt /> Last Updated:</span><span className="detail-value">{new Date(user?.updatedAt).toLocaleString()}</span></p>
-              <p><span className="detail-label"><FaIdCard /> Books Borrowed:</span><span className="detail-value">{user?.borrowedBooks?.length || 0}</span></p>
+              <p><span className="detail-label"><FaCalendarAlt /> Joined On:</span><span className="detail-value">{new Date(user?.createdAt).toLocaleString('en-IN')}</span></p>
+              <p><span className="detail-label"><FaCalendarAlt /> Last Updated:</span><span className="detail-value">{new Date(user?.updatedAt).toLocaleString('en-IN')}</span></p>
+              <p><span className="detail-label"><FaIdCard /> Total Books Borrowed:</span><span className="detail-value">{user?.borrowedBooks?.length || 0}</span></p>
+              <p><span className="detail-label"><FaIdCard /> Assets Assigned Currently :</span><span className="detail-value">{user?.assignedAssets?.filter(asset => asset?.returned === false).length || 0}</span></p>
             </div>
           </div>
         </div>

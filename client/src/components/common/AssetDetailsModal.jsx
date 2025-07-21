@@ -21,7 +21,7 @@ const AssetDetailsModal = ({ selectedAsset, setActiveModal }) => {
             <DetailRow label="Category" value={selectedAsset.assetCategory} />
             <DetailRow label="Serial Number" value={selectedAsset.serialNumber} />
             {selectedAsset.status === 'Assigned' && selectedAsset.assignedTo && (
-              <DetailRow label="Assigned To" value={selectedAsset.assignedTo.name} />
+              <DetailRow label="Assigned To" value={selectedAsset.assignedTo.email} />
             )}
             <DetailRow label="Cost" value={selectedAsset.cost ? `₹${selectedAsset.cost.toLocaleString('en-IN')}` : 'N/A'} />
             <DetailRow label="Purchase Date" value={formatDate(selectedAsset.purchaseDate)} />

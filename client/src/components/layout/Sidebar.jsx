@@ -122,7 +122,7 @@ const Sidebar = () => {
           <li>
             <NavLink to="/assets/assignments" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
               <span><FaTasks /></span>
-              <span>Assignments</span>
+              <span>Assignment Log</span>
             </NavLink>
           </li>
           <li>

@@ -14,7 +14,7 @@ const RepairLog = () => {
     const fetchRepairLog = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/v1/asset/repairs`, { withCredentials: true });
-        setLogs(response.data.data.repairLogs);
+        setLogs(response.data.data.repairLogs.reverse());
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch repair logs.');
       }
@@ -54,7 +54,7 @@ const RepairLog = () => {
                     <p className="serial-number">S/N: {log?.assetId?.serialNumber}</p>
                     <p className="problem-description"><strong>Remarks:</strong> {log?.remarks}</p>
                     <div className="timeline-footer">
-                      <span>Created: {new Date(log?.createdAt).toLocaleDateString()}</span>
+                      <span>Created: {new Date(log?.createdAt).toLocaleDateString('en-IN')}</span>
                       {log?.handledBy && <span>Handled By: {log?.handledBy?.name}</span>}
                     </div>
                   </div>

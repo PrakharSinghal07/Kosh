@@ -141,7 +141,7 @@ const Users = () => {
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td><span className={`role-pill ${user.role}`}>{user.role}</span></td>
-                      <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                      <td>{new Date(user.createdAt).toLocaleDateString('en-IN')}</td>
                                             <td><button className="table-action-button" onClick={() => navigate(`/user/${user._id}`)}>Details</button></td>
                     </tr>
                   ))}
