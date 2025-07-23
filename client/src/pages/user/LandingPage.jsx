@@ -23,15 +23,15 @@ function LandingPage() {
           </svg>
           <div className={styles.wave}></div>
         </div>
-        <button className={styles.getStartedButton} onClick={() => { isAuthenticated ? navigate("/home") : navigate("/register") }}>Register</button>
+        <button className={styles.getStartedButton} onClick={() => { isAuthenticated ? navigate("/home") : navigate("/login") }}>Login</button>
       </header>
       <main className={styles.mainContent}>
         <div className={styles.textSection}>
           <h1 className={styles.heading}>
-            Integrated Library & Asset Management for Your Business.
+            Unified Enterprise Resource Platform
           </h1>
           <p className={styles.description}>
-            Kosh provides two powerful systems in one platform. Manage your corporate library with ease while simultaneously tracking every physical asset in your inventory. Simple, powerful, and built to scale.
+          Manage your business effortlessly with Kosh’s all-in-one solution. Now featuring Library Management, Asset Management, Employee Lifecycle Management, and Audit Trails — everything you need to track knowledge, physical assets, people, and actions in one secure, scalable platform. Simple. Powerful. Transparent.
           </p>
           <button className={styles.readMoreButton} onClick={() => { isAuthenticated ? navigate("/home") : navigate("/login") }}>Get Started</button>
         </div>

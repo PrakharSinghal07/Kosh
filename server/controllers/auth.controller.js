@@ -6,6 +6,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { sendToken } from "../utils/sendToken.js";
 import { checkInvalidOrExpiredOTP } from "../utils/checkInvalidorExpiredOTP.js";
 import { verifyandProcessOTP } from "../utils/verifyandProcessOTP.js";
+import { logAction } from "../utils/logAction.js";
 export const handleUserRegister = catchAsyncErrors(async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
