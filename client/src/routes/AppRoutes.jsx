@@ -24,6 +24,11 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import NotFound from "../pages/user/NotFound";
+import EmployeeOnboarding from "../pages/Employees/EmployeeOnboarding";
+import EmployeesList from "../pages/Employees/EmployeesList";
+import EmployeeDetail from "../pages/Employees/EmployeeDetail";
+import EditProfile from "../pages/user/EditProfile";
+import AuditLog from "../pages/Logs/AuditLog";
 const AppRoutes = () => {
   const { user, isAdmin, loading } = useContext(AuthContext);
 
@@ -55,17 +60,44 @@ const AppRoutes = () => {
       <Route path='/change-password' element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
       <Route path='/my-assets' element={<ProtectedRoute><MyAssets /></ProtectedRoute>} />
 
-      {isAdmin(user) && (
+      {isAdmin(user, ["Admin"]) && (
         <>
           <Route path='/assets/home' element={<ProtectedRoute><AssetHome /></ProtectedRoute>} />
           <Route path='/assets/list' element={<ProtectedRoute><AssetList /></ProtectedRoute>} />
           <Route path='/assets/assignments' element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
           <Route path='/assets/repairs' element={<ProtectedRoute><RepairLog /></ProtectedRoute>} />
           <Route path='/assets/users' element={<ProtectedRoute><Users /></ProtectedRoute>} />
-          <Route path='/assets/add-new-admin' element={<ProtectedRoute><AddNewAdmin /></ProtectedRoute>} />
+          <Route path="/assets/repair-log" element={<ProtectedRoute><RepairLog /></ProtectedRoute>} />
+          <Route path="/employees" element={<ProtectedRoute><EmployeesList /></ProtectedRoute>} />
+          <Route path="/employees/onboard" element={<ProtectedRoute><EmployeeOnboarding /></ProtectedRoute>} />
+          <Route path="/employees/:id" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
+          <Route path="/employees/edit/:id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+          
         </>
       )}
-
+      {isAdmin(user, ["Asset Manager"]) && (
+        <>
+          <Route path='/assets/home' element={<ProtectedRoute><AssetHome /></ProtectedRoute>} />
+          <Route path='/assets/list' element={<ProtectedRoute><AssetList /></ProtectedRoute>} />
+          <Route path='/assets/assignments' element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
+          <Route path='/assets/repairs' element={<ProtectedRoute><RepairLog /></ProtectedRoute>} />
+          <Route path='/assets/users' element={<ProtectedRoute><Users /></ProtectedRoute>} />
+          <Route path="/assets/repair-log" element={<ProtectedRoute><RepairLog /></ProtectedRoute>} />
+         
+          
+        </>
+      )}
+      {isAdmin(user, ["HR"]) && (
+        <>
+          <Route path="/employees" element={<ProtectedRoute><EmployeesList /></ProtectedRoute>} />
+          <Route path="/employees/onboard" element={<ProtectedRoute><EmployeeOnboarding /></ProtectedRoute>} />
+          <Route path="/employees/:id" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
+          <Route path="/employees/edit/:id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+        </>
+      )}
+      {isAdmin(user, ["Admin"]) && (
+        <Route path="/logs" element={<ProtectedRoute><AuditLog /></ProtectedRoute>} />
+      )}
       <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
     </Routes>
   );

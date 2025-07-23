@@ -8,7 +8,7 @@ import Loader from '../../components/common/Loader';
 import AssignmentDetailsModal from '../../components/common/AssignmentDetailsModal';
 import { FaCalendarAlt, FaBoxOpen, FaUserAlt, FaUser } from 'react-icons/fa';
 
-// Helper function to get initials from a name
+
 const getInitials = (name) => {
   if (!name) return '??';
   const nameParts = name.trim().split(/\s+/);
@@ -105,7 +105,6 @@ const Assignments = () => {
           {filteredAssignments.length > 0 ? (
             <div className="assignments-timeline">
               {filteredAssignments.reverse().map((item, index) => {
-                console.log(item)
                 const status = item.returned;
                 const statusClass = ((status=="Returned") ? 'returned' : 'assigned');
                 

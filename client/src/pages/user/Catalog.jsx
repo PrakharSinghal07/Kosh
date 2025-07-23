@@ -98,7 +98,7 @@ const BorrowCard = ({ borrow, onReturnClick }) => {
           <p className="book-author">by {borrow?.book?.author || 'N/A'}</p>
         </div>
       </div>
-      {isAdmin(user) && (
+      {isAdmin(user, ["Admin", "Librarian"]) && (
         <div className="card-user-info">
           <FaUser className="user-icon" />
           <div>
@@ -119,7 +119,7 @@ const BorrowCard = ({ borrow, onReturnClick }) => {
       </div>
       <div className="card-footer">
         <span className={`status-pill ${statusClass}`}>{status}</span>
-        {isAdmin(user) && !borrow.returnDate && (
+        {isAdmin(user, ["Admin", "Librarian"]) && !borrow.returnDate && (
           <button className="return-btn" onClick={() => onReturnClick(borrow)}>Return</button>
         )}
       </div>

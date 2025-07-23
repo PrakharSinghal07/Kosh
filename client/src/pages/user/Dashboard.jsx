@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import DateTimeDisplay from '../../components/common/DateTimeDisplay';
 import Sidebar from '../../components/layout/Sidebar';
 import { AuthContext } from '../../context/AuthContext';
@@ -33,7 +33,7 @@ const Dashboard = () => {
     let barChartData = [];
     let pieChartData = [];
     let userGenreChartData = [];
-    if (isAdmin(user)) {
+    if (isAdmin(user, ["Admin", "Librarian"])) {
       const monthlyBorrows = Array(6).fill(0);
       const monthLabels = [];
       const today = new Date();
@@ -84,7 +84,7 @@ const Dashboard = () => {
         </header>
         {}
         <section className="stats-grid">
-          {isAdmin(user) ? (
+          {isAdmin(user, ["Admin", "Librarian"]) ? (
             <>
               <StatCard icon={<FaUsers />} label="Total Members" value={processedData.totalMembers} bgColor="#e0f2fe" />
               <StatCard icon={<FaBook />} label="Total Books" value={allBooks.length} bgColor="#dcfce7" />
@@ -100,7 +100,7 @@ const Dashboard = () => {
         </section>
         {}
         <section className="charts-grid">
-          {isAdmin(user) ? (
+          {isAdmin(user, ["Admin", "Librarian"]) ? (
             <>
               <ChartContainer title="Monthly Borrowing Trends">
                 <ResponsiveContainer width="100%" height={300}>
@@ -158,7 +158,7 @@ const Dashboard = () => {
               <div key={borrow?._id} className="activity-item">
                 <div className="activity-details">
                   <span className="activity-book-title">{borrow?.book?.title || 'Unknown Book'}</span>
-                  {isAdmin(user) && <span className="activity-member-name">by {borrow?.user?.name || 'Unknown User'}</span>}
+                  {isAdmin(user, ["Admin", "Librarian"]) && <span className="activity-member-name">by {borrow?.user?.name || 'Unknown User'}</span>}
                 </div>
                 <span className="activity-date">{new Date(borrow?.borrowDate).toLocaleDateString()}</span>
               </div>

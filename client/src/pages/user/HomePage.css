@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-.homepage-container {
-  display: flex;
-  position: relative;
-  min-height: 100vh;
-  background-color: #f4f5f7;
-  font-family: 'Poppins', sans-serif;
-  overflow: hidden;
-}
 
 .shape {
   position: absolute;
@@ -36,6 +28,52 @@
   bottom: 10%;
   left: 20%;
 }
+.home-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+  overflow: hidden;
+
+}
+
+.logout-container {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.logout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  background: linear-gradient(135deg, #ff5252, #ff3d3d);
+}
+
+.logout-icon {
+  font-size: 1.2rem;
+}
+
 .homepage-main-content {
   flex: 1;
   padding: 2rem;
@@ -137,6 +175,10 @@
   background: linear-gradient(135deg, #10b981, #34d399);
 }
 
+.employee-card {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+}
+
 .card-arrow {
   position: absolute;
   bottom: 1.5rem;
@@ -147,6 +189,9 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.audit-logs-card {
+  background: linear-gradient(135deg, #e07575, #ff5252);
+}
 .system-card:hover .card-arrow {
   opacity: 1;
   transform: translateX(0);

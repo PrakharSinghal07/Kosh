@@ -40,18 +40,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 }, [refreshAuthContext]);
-  const isAdmin = (user) => {
-    return user?.role === "Admin";
+  const isAdmin = (user, role) => {
+    if(role?.includes(user?.role)){
+      return true;
+    }
+    return false;
   }
   const logout = async () => {
     try {
-      await axios.post(`${apiUrl}/api/v1/auth/logout`, {}, { withCredentials: true });
+      await axios.get(`${apiUrl}/api/v1/auth/logout`, { withCredentials: true });
     } catch (err) {
       console.error('Logout error:', err);
     } finally {
       setUser(null);
       setIsAuthenticated(false);
       window.location.href = '/login';
+      setRefreshAuthContext(!refreshAuthContext);
     }
   };
   return (

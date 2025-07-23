@@ -46,7 +46,6 @@ const Sidebar = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      // navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -78,19 +77,11 @@ const Sidebar = () => {
           <span>Catalog</span>
         </NavLink>
       </li>
-      {isAdmin(user) && (
+      {isAdmin(user, ["Admin", "Librarian"]) && (
         <li>
           <NavLink to="/users" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
             <span><FaUsers /></span>
             <span>Users</span>
-          </NavLink>
-        </li>
-      )}
-      {isAdmin(user) && (
-        <li>
-          <NavLink to="/add-new-admin" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
-            <span><FaUserPlus /></span>
-            <span>Add New Admin</span>
           </NavLink>
         </li>
       )}
@@ -105,7 +96,7 @@ const Sidebar = () => {
           <span>Home</span>
         </NavLink>
       </li>
-      {isAdmin(user) ? (
+      {isAdmin(user, ["Admin", "Asset Manager"]) ? (
         <>
           <li>
             <NavLink to="/assets/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
@@ -135,12 +126,6 @@ const Sidebar = () => {
             <NavLink to="/assets/users" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
               <span><FaUsers /></span>
               <span>Users</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/assets/add-new-admin" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
-              <span><FaUserPlus /></span>
-              <span>Add New Admin</span>
             </NavLink>
           </li>
         </>

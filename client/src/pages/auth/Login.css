@@ -35,9 +35,14 @@
   margin-bottom: 1.4rem;
 }
 .branding-tagline {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   opacity: 0.9;
   color: rgb(255, 255, 255); 
+}
+.branding-tagline-span{
+  background: linear-gradient(90deg, #09060a, #150933);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .navigate-to-register {
   margin-top: 1rem;

@@ -58,10 +58,7 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-left">
         <h1 className="branding-logo"><KoshLogo /></h1>
-        <p className="branding-tagline">Create a new account</p>
-        <NavLink className="navigate-to-register" to="/register">
-          Register
-        </NavLink>
+        <p className="branding-tagline">Empowering Enterprises <br /> with <span className="branding-tagline-span">Unified Resource Control.</span></p>
       </div>
       <div className="auth-right">
         <div className="login-static-container">

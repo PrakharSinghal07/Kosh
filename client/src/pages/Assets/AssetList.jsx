@@ -42,9 +42,6 @@ const AssetList = () => {
     fetchAssets();
   }, []);
 
-  useEffect(() => {
-    console.log(assets);
-  }, [assets]);
 
   useEffect(() => {
     let filtered = assets;
@@ -372,25 +369,13 @@ const AssetList = () => {
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
-            {isAdmin(user) && (
+            {isAdmin(user, ["Admin", "AssetManager"]) && (
               <button onClick={() => setActiveModal('add')} className="add-book-btn">Add New Asset</button>
             )}
           </div>
         </header>
         <section className="books-section">
           <div className="table-container">
-            {activeModal === 'confirm' && (
-              <div className="modal-backdrop">
-                <div className="modal-content">
-                  <h2>Confirm Action</h2>
-                  <p>{confirmMessage}</p>
-                  <div className="modal-actions">
-                    <button onClick={() => setActiveModal(null)} className="btn-cancel">Cancel</button>
-                    <button onClick={() => { confirmAction(); setActiveModal(null); }} className="btn-confirm">Confirm</button>
-                  </div>
-                </div>
-              </div>
-            )}
             {activeModal === 'repair' && (
               <RepairModal
                 selectedAsset={selectedAsset}

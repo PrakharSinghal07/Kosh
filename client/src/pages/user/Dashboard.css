@@ -162,55 +162,50 @@
 .pagination-page-button:not(.active):hover {
   background-color: #f9fafb;
 }
-/* --- Additional Responsive Styles for Tablet & Mobile --- */
 
-/* For smaller tablets and large phones */
 @media (max-width: 900px) {
   .main-content-v2 {
-    padding: 2rem 1.5rem; /* Reduce horizontal padding */
+    padding: 2rem 1.5rem;
   }
 }
 
-/* For mobile devices */
 @media (max-width: 640px) {
   .header-v2 {
-    flex-direction: column; /* Stack header elements vertically */
+    flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
   }
 
   .header-datetime {
-    text-align: left; /* Align datetime to the left */
+    text-align: left;
   }
 
   .header-datetime h3 {
-    font-size: 1.25rem; /* Slightly smaller time font */
+    font-size: 1.25rem;
   }
 
   .stats-grid,
   .charts-grid {
-    gap: 1rem; /* Reduce gap between cards */
+    gap: 1rem;
   }
 
   .activity-item {
-    flex-direction: column; /* Stack activity details and date */
+    flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 }
 
-/* For very small mobile devices */
 @media (max-width: 480px) {
   .main-content-v2 {
-    padding: 1rem; /* Further reduce padding */
+    padding: 1rem;
   }
-  
   .header-greeting h1 {
     font-size: 1.5rem;
   }
 
   .stat-card-v2 {
-    padding: 1rem; /* Reduce padding inside stat cards */
+    padding: 1rem;
   }
 
   .stat-info .stat-value {
@@ -219,7 +214,7 @@
 
   .chart-container,
   .recent-activity-section {
-    padding: 1rem; /* Reduce padding in larger containers */
+    padding: 1rem;
   }
 
   .chart-title,

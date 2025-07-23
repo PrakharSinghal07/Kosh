@@ -73,7 +73,7 @@ const Books = () => {
           >
             <FaEye />
           </button>
-          {isAdmin(user) && (
+          {isAdmin(user, ["Admin", "Librarian"]) && (
             <>
               <button 
                 onClick={() => handleEdit(record)}
@@ -175,7 +175,7 @@ const Books = () => {
         <header className="books-header">
           <h2>Books Collection</h2>
           <div className="books-controls">
-            {isAdmin(user) && (
+            {isAdmin(user, ["Admin", "Librarian"]) && (
               <button className="add-book-btn" onClick={() => setShowAddBookModal(true)}>
                 Add Book
               </button>
@@ -235,7 +235,7 @@ const Books = () => {
                   <th>Author</th>
                   <th>Genre</th>
                   <th>Price</th>
-                  {isAdmin(user) && <th>Quantity</th>}
+                  {isAdmin(user, ["Admin", "Librarian"]) && <th>Quantity</th>}
                   <th>Available</th>
                   <th>Actions</th>
                 </tr>
@@ -250,7 +250,7 @@ const Books = () => {
                     <td>{book.author}</td>
                     <td>{book.genre}</td>
                     <td>₹{book.price}</td>
-                    {isAdmin(user) && <td>{book.quantity} left</td>}
+                    {isAdmin(user, ["Admin", "Librarian"]) && <td>{book.quantity} left</td>}
                     <td>
                       <span className={`status-badge ${book.availability ? "active" : "overdue"}`}>{book.availability ? "Yes" : "No"}</span>
                     </td>
@@ -263,7 +263,7 @@ const Books = () => {
                         >
                           Read
                         </button>
-                        {isAdmin(user) && <button onClick={() => handleAssignClick(book)}>Assign</button>}
+                        {isAdmin(user, ["Admin", "Librarian"]) && <button onClick={() => handleAssignClick(book)}>Assign</button>}
                       </div>
                     </td>
                   </tr>
