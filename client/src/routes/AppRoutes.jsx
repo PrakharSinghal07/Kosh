@@ -28,7 +28,7 @@ import EmployeeOnboarding from "../pages/Employees/EmployeeOnboarding";
 import EmployeesList from "../pages/Employees/EmployeesList";
 import EmployeeDetail from "../pages/Employees/EmployeeDetail";
 import EditProfile from "../pages/user/EditProfile";
-import AuditLog from "../pages/Logs/AuditLog";
+import AuditLog from "../pages/Logss/AuditLog";
 const AppRoutes = () => {
   const { user, isAdmin, loading } = useContext(AuthContext);
 
