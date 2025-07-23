@@ -60,11 +60,22 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   }
   const user = await User.findOne({
     email,
-    accountVerified: true,
   }).select("+password");
   if (!user) return next(new ErrorHandler("Invalid email or password", 400));
   const isPasswordMatched = await bcrypt.compare(password, user.password);
   if (!isPasswordMatched) return next(new ErrorHandler("Invalid password", 400));
+  user.accountVerified = true;
+  await user.save();  
+  await logAction({
+    action: 'User Logged In',
+    performedBy: user._id, 
+    target: user._id,
+    targetModel: 'User',
+    details: {
+      loggedInByName: user.name,
+      loggedInByEmail: user.email
+    }
+  });
   sendToken(user, 200, "User login successfully", res);
 });
 export const logout = catchAsyncErrors(async (req, res, next) => {
@@ -75,6 +86,16 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
+    })
+    await logAction({
+      action: 'User Logged Out',
+      performedBy: req.user._id, 
+      target: req.user._id,
+      targetModel: 'User',
+      details: {
+        loggedOutByName: req.user.name,
+        loggedOutByEmail: req.user.email
+      }
     })
     .json({
       success: true,
@@ -126,6 +147,16 @@ export const verifyPasswordChangeOTP = catchAsyncErrors(async (req, res, next) =
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
     await user.save();
+    await logAction({
+      action: 'User Password Changed',
+      performedBy: user._id, 
+      target: user._id,
+      targetModel: 'User',
+      details: {
+        changedByName: user.name,
+        changedByEmail: user.email
+      }
+    });
     return res.status(200).json({
       status: "success",
       message: "password changed successfully",
@@ -158,7 +189,16 @@ export const requestPasswordReset = catchAsyncErrors(async (req, res, next) => {
   await user.save();
   const subject = "Password Reset Request - OTP Verification";
   await sendVerificationCode(verificationCode, email, subject, next);
-  
+  await logAction({
+    action: 'User Password Reset Requested',
+    performedBy: user._id, 
+    target: user._id,
+    targetModel: 'User',
+    details: {
+      requestedByName: user.name,
+      requestedByEmail: user.email
+    }
+  });
   res.status(200).json({
     success: true,
     message: "If an account exists with this email, a password reset OTP has been sent."

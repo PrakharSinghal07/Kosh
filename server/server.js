@@ -11,9 +11,8 @@ import userRouter from "./routers/user.router.js";
 import assetRouter from "./routers/asset.router.js";
 import assetAssignmentRouter from "./routers/assignAsset.router.js";
 import { v2 as cloudinary } from "cloudinary";
-import expressFileUpload from "express-fileupload";
-import { deleteUnverifiedUsers } from "./services/deleteUnverifiedUsers.js";
 import { notifyUsers } from "./services/notifyUsers.js";
+import auditLogRoutes from "./routers/auditLog.router.js";
 config();
 
 const app = express();
@@ -27,18 +26,18 @@ cloudinary.config({
 app.use(
   cors({
     origin: ["https://kosh-erp.netlify.app", "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(expressFileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
+
+
 
 connectDB().then(() => {
   console.log("DATABASE CONNECTED SUCCESSFULLY");
-  deleteUnverifiedUsers();
   notifyUsers();
   app.listen(process.env.PORT, () => {
     console.log(`Server started on PORT ${process.env.PORT}`);
@@ -55,5 +54,5 @@ app.use("/api/v1/borrow", borrowRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/asset", assetRouter);
 app.use("/api/v1/assignAsset", assetAssignmentRouter);
-
+app.use('/api/audit-logs', auditLogRoutes);
 app.use(errorMiddleware);

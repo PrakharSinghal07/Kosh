@@ -4,6 +4,7 @@ import { Asset } from "../models/asset.model.js";
 import { Assignment } from "../models/assetAssignment.model.js";
 import { RepairLog } from "../models/repairLog.model.js";
 import { User } from "../models/user.model.js";
+import { logAction } from "../utils/logAction.js";
 export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => {
   const { email } = req.body;
   const { sno } = req.params;
@@ -48,6 +49,16 @@ export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => 
   asset.assignedTo = user._id;
   await user.save();
   await asset.save();
+  await logAction({
+    action: 'Asset Assigned',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      assignedTo: user._id,
+      assignedBy: req.user._id
+    }
+  });
   return res.status(200).json({
     status: "success",
     message: "Asset successfully assigned",
@@ -95,6 +106,16 @@ export const recordAssetReturn = catchAsyncErrors(async (req, res, next) => {
   await assignment.save();
   await asset.save();
   await user.save();
+  await logAction({
+    action: 'Asset Returned',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      returnedBy: user._id,
+      returnedTo: asset.assignedTo
+    }
+  });
   return res.status(200).json({
     success: true,
     message: "Asset successfully returned.",
@@ -124,6 +145,16 @@ export const recordRepairAsset = catchAsyncErrors(async (req, res, next) => {
     remarks: remarks || "No remarks",
     handledBy: req.user.id,
   });
+  await logAction({
+    action: 'Asset Repaired',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      repairedBy: req.user._id,
+      repairedTo: asset.assignedTo
+    }
+  });
   return res.status(200).json({
     status: "success",
     message: "Asset recorded for repair",
@@ -146,6 +177,16 @@ export const recordAssetRepaired = catchAsyncErrors(async (req, res, next) => {
     status: "Repaired",
     remarks: remarks || "No remarks",
     handledBy: req.user.id,
+  });
+  await logAction({
+    action: 'Asset Repaired',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      repairedBy: req.user._id,
+      repairedTo: asset.assignedTo
+    }
   });
   return res.status(200).json({
     status: "success",
@@ -189,6 +230,16 @@ export const recordAssetRetired = catchAsyncErrors(async (req, res, next) => {
     remarks: remarks || "No remarks",
     handledBy: req.user.id,
   });
+  await logAction({
+    action: 'Asset Retired',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      retiredBy: req.user._id,
+      retiredTo: asset.assignedTo
+    }
+  });
   return res.status(200).json({
     status: "success",
     message: "Asset retired successfully.",
@@ -205,6 +256,7 @@ export const getMyAssignments = catchAsyncErrors(async (req, res, next) => {
   if (!assignments) {
     return next(new ErrorHandler("No assignments found for this user.", 404));
   }
+
   res.status(200).json({
     success: true,
     count: assignments.length,

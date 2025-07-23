@@ -4,6 +4,7 @@ import { Asset } from "../models/asset.model.js";
 import { Assignment } from "../models/assetAssignment.model.js";
 import { RepairLog } from "../models/repairLog.model.js";
 import { User } from "../models/user.model.js";
+import { logAction } from "../utils/logAction.js";
 export const getAllAssets = catchAsyncErrors(async (req, res, next) => {
   const assets = await Asset.find({}).populate({ path: "assignedTo" });
   return res.json({ assets: assets });
@@ -43,6 +44,16 @@ export const createNewAsset = catchAsyncErrors(async (req, res, next) => {
     cost,
     status,
   });
+  await logAction({
+    action: 'Asset Created',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      createdByName: req.user.name,
+      createdByEmail: req.user.email
+    }
+  });
   return res.status(201).json({
     success: true,
     message: "Asset created successfully",
@@ -77,6 +88,16 @@ export const updateAssetDetails = catchAsyncErrors(async (req, res, next) => {
   if (warrantyExpiry) asset.warrantyExpiry = new Date(warrantyExpiry);
   if (cost) asset.cost = cost;
   await asset.save();
+  await logAction({
+    action: 'Asset Updated',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      updatedByName: req.user.name,
+      updatedByEmail: req.user.email
+    }
+  });
   return res.status(200).json({
     success: true,
     message: "Asset details updated successfully",
@@ -117,6 +138,16 @@ export const deleteAsset = catchAsyncErrors(async (req, res, next) => {
   }
   await Assignment.updateMany({ assetId: asset._id }, { $set: { status: "Deleted" } });
   await asset.deleteOne();
+  await logAction({
+    action: 'Asset Deleted',
+    performedBy: req.user._id, 
+    target: asset._id,
+    targetModel: 'Asset',
+    details: {
+      deletedByName: req.user.name,
+      deletedByEmail: req.user.email
+    }
+  });
   return res.status(200).json({
     success: true,
     message: "Asset deleted successfully and related references cleaned.",
