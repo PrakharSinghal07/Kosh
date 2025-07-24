@@ -1,94 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kosh Enterprise Resource Platform - README</title>
-<style>
-  body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
-  color: #e0e0e0;
-  line-height: 1.6;
-  margin: 0;
-  padding: 2rem;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
+# Kosh Enterprise Resource Platform
 
-h1, h2, h3 {
-  color: #81a1c1;
-}
+A comprehensive, unified platform designed to manage your enterprise’s intellectual assets, physical inventory, employee lifecycle, and audit trails — all in one place.
 
-h1 {
-  border-bottom: 3px solid #88c0d0;
-  padding-bottom: 0.3rem;
-}
+## About The Project
 
-a {
-  color: #8fbcbb;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-pre {
-  background: #2e3440;
-  color: #d8dee9;
-  padding: 1rem;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-code {
-  background: #3b4252;
-  padding: 0.1rem 0.3rem;
-  border-radius: 3px;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-ul, ol {
-  margin-top: 0;
-}
-
-section {
-  margin-bottom: 2.5rem;
-}
-
-blockquote {
-  border-left: 4px solid #81a1c1;
-  margin-left: 0;
-  padding-left: 1rem;
-  color: #d8dee9;
-  font-style: italic;
-  background: #3b4252;
-  border-radius: 4px;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid #434c5e;
-  margin: 2rem 0;
-}
-
-footer {
-  font-size: 0.9rem;
-  color: #616e88;
-  border-top: 1px solid #434c5e;
-  padding-top: 1rem;
-  text-align: center;
-}
-
-</style>
-</head>
-<body>
-
-<h1>Kosh Enterprise Resource Platform</h1>
-<p><em>A comprehensive, unified platform designed to manage your enterprise’s intellectual assets, physical inventory, employee lifecycle, and audit trails — all in one place.</em></p>
+Most enterprises struggle with disconnected systems managing physical inventory, intellectual resources, employee data, and compliance logs, leading to silos, inefficiencies, and risks.
 
 <section>
   <h2>📘 About The Project</h2>
@@ -257,5 +173,3 @@ npm run dev
   <p>✨ Built with love and purpose to unify enterprise knowledge and asset management.</p>
 </footer>
 
-</body>
-</html>
