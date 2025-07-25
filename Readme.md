@@ -2,10 +2,6 @@
 
 A comprehensive, unified platform designed to manage your enterprise’s intellectual assets, physical inventory, employee lifecycle, and audit trails — all in one place.
 
-## About The Project
-
-Most enterprises struggle with disconnected systems managing physical inventory, intellectual resources, employee data, and compliance logs, leading to silos, inefficiencies, and risks.
-
 <section>
   <h2>📘 About The Project</h2>
   <p>Most enterprises struggle with disconnected systems managing physical inventory, intellectual resources, employee data, and compliance logs, leading to silos, inefficiencies, and risks.</p>
