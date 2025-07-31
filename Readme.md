@@ -141,6 +141,19 @@ npm run dev
 </section>
 
 <section>
+  <h2>🤖 LLM-Powered Contextual Assistant (Gemini 2.5 Flash)</h2>
+  <ul>
+    <li><strong>Role-Aware Intelligence:</strong> The assistant dynamically tailors its responses based on the user's role (Admin, HR, Librarian, Asset Manager, or Employee), ensuring all replies are within authorized scope.</li>
+    <li><strong>Gemini 2.5 Flash Integration:</strong> Built on Google’s Gemini 2.5 Flash model for fast, efficient LLM-based responses with strong contextual understanding.</li>
+    <li><strong>System-Prompt Controlled:</strong> Responses are governed by a structured system prompt that enforces business logic and RBAC policies to prevent unauthorized access or misinformation.</li>
+    <li><strong>Scoped Guidance:</strong> Users can ask feature-specific or task-related questions and receive guided support — like "How do I add an asset?" — with answers appropriate to their role and permissions.</li>
+    <li><strong>Context Persistence:</strong> Maintains conversational history to support multi-step queries, enabling personalized and contextually-aware interactions.</li>
+    <li><strong>Enterprise-Grade UX:</strong> Enhances user experience by reducing support overhead, accelerating onboarding, and acting as an in-platform assistant for all roles.</li>
+  </ul>
+</section>
+
+
+<section>
   <h2>🛠️ Challenges & Learnings</h2>
   <ul>
     <li>Implementing <strong>file uploads</strong> with Multer and integrating Cloudinary was challenging but crucial for handling media securely and efficiently.</li>

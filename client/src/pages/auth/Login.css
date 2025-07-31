@@ -41,6 +41,7 @@
 }
 .branding-tagline-span{
   background: linear-gradient(90deg, #09060a, #150933);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
