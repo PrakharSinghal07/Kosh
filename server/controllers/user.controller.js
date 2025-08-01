@@ -381,7 +381,7 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
 export const updateEmployeeStatus = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { status, exitReason, lastWorkingDay } = req.body;
-  console.log(req.body);
+  console.log(id,req.body);
   const validStatuses = ["Active", "On Leave", "Suspended", "Resigned", "Terminated"];
   if (!validStatuses.includes(status)) {
     return next(new ErrorHandler("Invalid status", 400));

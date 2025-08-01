@@ -14,6 +14,8 @@ import { v2 as cloudinary } from "cloudinary";
 import { notifyUsers } from "./services/notifyUsers.js";
 import auditLogRoutes from "./routers/auditLog.router.js";
 import aiOperations from "./routers/aiOperations.js";
+import swaggerSpec from "./swagger.js";
+import swaggerUi from "swagger-ui-express";
 config();
 
 const app = express();
@@ -26,7 +28,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: ["https://kosh-erp.netlify.app", "http://localhost:5173"],
+    origin: ["https://kosh-erp.netlify.app", "http://localhost:5173", "http://localhost:8000"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
@@ -49,6 +51,8 @@ app.get("/ping", (req, res) => {
     message: "pong",
   });
 });
+
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/borrow", borrowRouter);
@@ -57,4 +61,5 @@ app.use("/api/v1/asset", assetRouter);
 app.use("/api/v1/assignAsset", assetAssignmentRouter);
 app.use('/api/audit-logs', auditLogRoutes);
 app.use('/api/v1/ai-operations', aiOperations);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(errorMiddleware);

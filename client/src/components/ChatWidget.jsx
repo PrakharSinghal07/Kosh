@@ -45,7 +45,7 @@ const ChatWidget = () => {
       ],
     });
     let botReply;
-    const ai = new GoogleGenAI({ apiKey: "AIzaSyA8K9Pr0-fySsTCgz89SNMDArnJzppqpUA" });
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
     async function main() {
       const response = await ai.models.generateContent({
