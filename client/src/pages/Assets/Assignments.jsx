@@ -18,7 +18,7 @@ const getInitials = (name) => {
 
 const Assignments = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const { user } = useContext(AuthContext);
+  const { refreshAuthContext } = useContext(AuthContext);
   const [assignments, setAssignments] = useState([]);
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const Assignments = () => {
 
   useEffect(() => {
     fetchAssignments();
-  }, []);
+  }, [refreshAuthContext]);
 
   useEffect(() => {
     const lowercasedFilter = searchTerm.toLowerCase();

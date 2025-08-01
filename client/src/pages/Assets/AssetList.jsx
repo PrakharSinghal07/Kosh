@@ -15,7 +15,7 @@ import AssignAssetModal from '../../components/common/AssignAssetModal';
 
 const AssetList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const { user, isAdmin } = useContext(AuthContext);
+  const { user, isAdmin, refreshAuthContext } = useContext(AuthContext);
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,7 +40,7 @@ const AssetList = () => {
 
   useEffect(() => {
     fetchAssets();
-  }, []);
+  }, [refreshAuthContext]);
 
 
   useEffect(() => {

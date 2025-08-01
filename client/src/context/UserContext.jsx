@@ -9,7 +9,7 @@ const UserProvider = ({ children }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [borrows, setBorrows] = useState([]);
   const [userContextUpdated, setUserContextUpdated] = useState(false);
-  const { user, isAdmin, isAuthenticated } = useContext(AuthContext);
+  const { user, isAdmin, isAuthenticated, refreshAuthContext } = useContext(AuthContext);
   const apiUrl = import.meta.env.VITE_API_URL
   useEffect(() => {
     if (!isAuthenticated) {
@@ -31,7 +31,7 @@ const UserProvider = ({ children }) => {
       }
     };
     fetchBooks();
-  }, [isAuthenticated, userContextUpdated]);
+  }, [isAuthenticated, userContextUpdated, refreshAuthContext]);
   useEffect(() => {
     if (!isAuthenticated) return;
     if (!isAdmin(user, ["Admin", "Librarian", "Asset Manager"])) {
@@ -48,7 +48,7 @@ const UserProvider = ({ children }) => {
       }
     };
     fetchUsers();
-  }, [isAuthenticated, userContextUpdated]);
+  }, [isAuthenticated, userContextUpdated, refreshAuthContext]);
   useEffect(() => {
     if (!isAuthenticated) return;
     const fetchUserBorrows = async () => {
@@ -76,7 +76,7 @@ const UserProvider = ({ children }) => {
     } else {
       fetchBorrows();
     }
-  }, [isAuthenticated, userContextUpdated]);
+  }, [isAuthenticated, userContextUpdated, refreshAuthContext]);
   return <UserContext.Provider value={{ activeLink, setActiveLink, allBooks, allUsers, borrows, userContextUpdated, setUserContextUpdated }}>{children}</UserContext.Provider>;
 };
 export default UserProvider;

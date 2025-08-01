@@ -6,11 +6,12 @@ import { FaSearch, FaUserShield, FaUser, FaEnvelope, FaCalendarAlt, FaIdCard, Fa
 import Sidebar from '../../components/layout/Sidebar';
 import Loader from '../../components/common/Loader';
 import './Users.css';
+import { GoogleGenAI } from "@google/genai";
 const UserCard = ({ user }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const navigate = useNavigate();
   const handleProfileClick = (e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     navigate(`/user/${user._id}`);
   };
   const cardVariants = {
@@ -31,7 +32,7 @@ const UserCard = ({ user }) => {
         transition={{ duration: 0.6, ease: 'easeInOut' }}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {}
+        { }
         <div className="card-face card-front">
           <div className="card-header-bg"></div>
           <div className="user-avatar">{user.name.charAt(0).toUpperCase()}</div>
@@ -40,7 +41,7 @@ const UserCard = ({ user }) => {
             <p className={`user-role ${user.role}`}>{user.role}</p>
           </div>
         </div>
-        {}
+        { }
         <div className="card-face card-back">
           <h3 className="card-back-title">Details</h3>
           <div className="user-details">
@@ -58,10 +59,12 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [viewMode, setViewMode] = useState('table'); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('table');
+  const [input, setInput] = useState('');
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const ai = new GoogleGenAI({ apiKey: "AIzaSyB1T-IrYYueecCAYoAeXyLpZycnlHyFjDk" });
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -90,17 +93,48 @@ const Users = () => {
   }
   if (error) {
     return (
-        <div className="users-layout">
-            <Sidebar />
-            <main className="users-main-content"><div className="error-container">{error}</div></main>
-        </div>
+      <div className="users-layout">
+        <Sidebar />
+        <main className="users-main-content"><div className="error-container">{error}</div></main>
+      </div>
     );
   }
+  const handleGo = async () => {
+    console.log(input)
+    const prompt = `Given the following book details in natural langauge, can you generate a JSON object for it?
+    ${input}. The JSON object should have the following structure:
+    {
+      "title": "Book Title",
+      "author": "Book Author",
+      "description": "Book Description",
+      "price": "Book Price",
+      "quantity": "Book Quantity",
+      "genre": "Book Genre"
+    } Remember to return only the JSON object.`
+    async function main() {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{
+          text: prompt,
+        }],
+      });
+      const jsonString = response.text
+        .replace(/```json/, '')  // remove ```json
+        .replace(/```/, '')      // remove ```
+        .trim();
+      const bookObj = JSON.parse(jsonString);
+      console.log(bookObj);
+      const bookResponse = await axios.post(`${apiUrl}/api/v1/book/admin/addBooks`, bookObj, { withCredentials: true });
+      console.log(bookResponse);
+    }
+
+    await main();
+  };
   return (
     <div className="users-layout">
       <Sidebar />
       <main className="users-main-content">
-                <header className="users-header">
+        <header className="users-header">
           <h1>Manage Users</h1>
           <div className="users-controls">
             <div className="search-container">
@@ -118,7 +152,7 @@ const Users = () => {
             </div>
           </div>
         </header>
-                {filteredUsers.length > 0 ? (
+        {filteredUsers.length > 0 ? (
           viewMode === 'card' ? (
             <div className="users-grid">
               {filteredUsers.map(user => <UserCard key={user._id} user={user} />)}
@@ -142,11 +176,13 @@ const Users = () => {
                       <td>{user.email}</td>
                       <td><span className={`role-pill ${user.role}`}>{user.role}</span></td>
                       <td>{new Date(user.createdAt).toLocaleDateString('en-IN')}</td>
-                                            <td><button className="table-action-button" onClick={() => navigate(`/user/${user._id}`)}>Details</button></td>
+                      <td><button className="table-action-button" onClick={() => navigate(`/user/${user._id}`)}>Details</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
+              <button onClick={handleGo}>Go</button>
             </div>
           )
         ) : (

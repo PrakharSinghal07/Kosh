@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -32,14 +32,14 @@ import {
   Refresh as RefreshIcon
 } from '@mui/icons-material';
 import EmployeeLayout from '../../components/EmployeeLayout';
-
+import { AuthContext } from '../../context/AuthContext';
 const EmployeesList = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const navigate = useNavigate();
-
+  const { refreshAuthContext } = useContext(AuthContext);
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const fetchEmployees = async () => {
@@ -76,7 +76,7 @@ const EmployeesList = () => {
     };
 
     fetchEmployees();
-  }, [navigate]);
+  }, [navigate, refreshAuthContext]);
 
   const handleDeleteClick = (employee) => {
     setSelectedEmployee(employee);

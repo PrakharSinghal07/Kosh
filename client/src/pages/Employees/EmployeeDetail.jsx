@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Box,
@@ -46,7 +46,7 @@ import {
 } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
+import { AuthContext } from '../../context/AuthContext';
 const EmployeeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const EmployeeDetail = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
-
+  const { refreshAuthContext } = useContext(AuthContext);
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
@@ -81,7 +81,7 @@ const EmployeeDetail = () => {
     if (id) {
       fetchEmployee();
     }
-  }, [id, navigate, apiUrl]);
+  }, [id, navigate, apiUrl, refreshAuthContext]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);

@@ -26,7 +26,7 @@ const AssetHome = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dateTime, setDateTime] = useState(new Date());
-  const { user } = useContext(AuthContext);
+  const { user, refreshAuthContext } = useContext(AuthContext);
   const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -45,7 +45,7 @@ const AssetHome = () => {
       }
     };
     fetchStats();
-  }, [apiUrl]);
+  }, [apiUrl, refreshAuthContext]);
   if (loading) {
     return (
       <div className="books-container">

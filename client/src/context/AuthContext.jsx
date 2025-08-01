@@ -58,8 +58,12 @@ export const AuthProvider = ({ children }) => {
       setRefreshAuthContext(!refreshAuthContext);
     }
   };
+
+  const refreshAuthContextHandler = () => {
+    setRefreshAuthContext(!refreshAuthContext);
+  }
   return (
-    <AuthContext.Provider
+    <AuthContext.Provider 
       value={{
         registerData,
         setRegisterData,
@@ -70,7 +74,9 @@ export const AuthProvider = ({ children }) => {
         setRefreshAuthContext,
         loading,
         isAdmin,
-        logout
+        logout,
+        refreshAuthContextHandler,
+        refreshAuthContext,
       }}
     >
       {children}

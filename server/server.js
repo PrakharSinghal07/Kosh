@@ -13,6 +13,7 @@ import assetAssignmentRouter from "./routers/assignAsset.router.js";
 import { v2 as cloudinary } from "cloudinary";
 import { notifyUsers } from "./services/notifyUsers.js";
 import auditLogRoutes from "./routers/auditLog.router.js";
+import aiOperations from "./routers/aiOperations.js";
 config();
 
 const app = express();
@@ -55,4 +56,5 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/asset", assetRouter);
 app.use("/api/v1/assignAsset", assetAssignmentRouter);
 app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/v1/ai-operations', aiOperations);
 app.use(errorMiddleware);

@@ -33,6 +33,7 @@ A comprehensive, unified platform designed to manage your enterprise’s intelle
     <li><strong>Secure JWT Authentication:</strong> Robust session management with HTTP-only cookies and OTP-based verification.</li>
     <li><strong>Audit Logs:</strong> Comprehensive logging of platform activities with paginated audit views.</li>
     <li><strong>File Uploads:</strong> Multer + Cloudinary integration for secure and scalable media handling.</li>
+    <li><strong>LLM-Powered Contextual Assistant:</strong> Interactive AI assistant enabling users to perform system operations via natural language, with role-based authorization and secure action execution.</li>
     <li><strong>Modular UI:</strong> Dynamic dashboards showing module cards per user role.</li>
     <li><strong>Search & Filter:</strong> Client-side search & filter across all modules.</li>
     <li><strong>Graphical Dashboards:</strong> Visual reports and analytics for Library and Asset Management modules.</li>
@@ -143,12 +144,13 @@ npm run dev
 <section>
   <h2>🤖 LLM-Powered Contextual Assistant (Gemini 2.5 Flash)</h2>
   <ul>
-    <li><strong>Role-Aware Intelligence:</strong> The assistant dynamically tailors its responses based on the user's role (Admin, HR, Librarian, Asset Manager, or Employee), ensuring all replies are within authorized scope.</li>
+    <li><strong>Role-Aware Intelligence:</strong> The assistant dynamically tailors its responses and actions based on the user's role (Admin, HR, Librarian, Asset Manager, or Employee), ensuring all replies and operations are within authorized scope.</li>
     <li><strong>Gemini 2.5 Flash Integration:</strong> Built on Google’s Gemini 2.5 Flash model for fast, efficient LLM-based responses with strong contextual understanding.</li>
-    <li><strong>System-Prompt Controlled:</strong> Responses are governed by a structured system prompt that enforces business logic and RBAC policies to prevent unauthorized access or misinformation.</li>
-    <li><strong>Scoped Guidance:</strong> Users can ask feature-specific or task-related questions and receive guided support — like "How do I add an asset?" — with answers appropriate to their role and permissions.</li>
-    <li><strong>Context Persistence:</strong> Maintains conversational history to support multi-step queries, enabling personalized and contextually-aware interactions.</li>
-    <li><strong>Enterprise-Grade UX:</strong> Enhances user experience by reducing support overhead, accelerating onboarding, and acting as an in-platform assistant for all roles.</li>
+    <li><strong>Natural Language System Control:</strong> Users can interact with the platform using natural language prompts to perform most system operations—such as adding assets, updating employee records, managing library checkouts—directly through conversational commands.</li>
+    <li><strong>System-Prompt Controlled & Secure:</strong> Responses and actions are governed by a structured system prompt enforcing business logic and RBAC policies to prevent unauthorized access or erroneous operations.</li>
+    <li><strong>Scoped Guidance & Execution:</strong> The assistant not only guides users through feature-specific or task-related queries but can also execute the relevant backend actions based on the conversation context and user permissions.</li>
+    <li><strong>Context Persistence:</strong> Maintains conversational history to support multi-step, contextually-aware interactions enabling seamless workflows and complex command sequences.</li>
+    <li><strong>Enterprise-Grade UX:</strong> Significantly reduces support overhead and accelerates user onboarding by acting as an interactive in-platform assistant across all user roles.</li>
   </ul>
 </section>
 

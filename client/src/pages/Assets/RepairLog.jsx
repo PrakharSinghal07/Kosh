@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import '../user/Books.css'; 
 const RepairLog = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const { user } = useContext(AuthContext);
+  const { refreshAuthContext } = useContext(AuthContext);
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const RepairLog = () => {
       setLoading(false);
     };
     fetchRepairLog();
-  }, [apiUrl]);
+  }, [apiUrl, refreshAuthContext]);
   if (loading) {
     return (
       <div className="books-container">

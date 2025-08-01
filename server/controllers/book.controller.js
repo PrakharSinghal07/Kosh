@@ -46,6 +46,48 @@ export const deleteBooks = catchAsyncErrors(async (req, res, next) => {
     message: "Book deleted successfully",
   });
 });
+export const updateBooks = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const { title, author, description, price, quantity, genre } = req.body.updates;
+  const book = await Book.findById(id);
+  if (!book) {
+    return next(new ErrorHandler("Book not found", 404));
+  }
+  if(title){
+    book.title = title;
+  }
+  if(author){
+    book.author = author;
+  }
+  if(description){
+    book.description = description;
+  }
+  if(price){
+    book.price = price;
+  }
+  if(quantity){
+    book.quantity = quantity;
+  }
+  if(genre){
+    book.genre = genre;
+  }
+  await book.save();
+  await logAction({
+    action: 'Book Updated',
+    performedBy: req.user._id, 
+    target: book._id,
+    targetModel: 'Book',
+    details: {
+      updatedByName: req.user.name,
+      updatedByEmail: req.user.email
+    }
+  });
+  res.status(200).json({
+    success: true,
+    message: "Book updated successfully",
+    book,
+  });
+});
 export const getAllBooks = catchAsyncErrors(async (req, res, next) => {
   const books = await Book.find({});
   res.status(200).json({

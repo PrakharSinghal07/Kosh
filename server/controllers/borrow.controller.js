@@ -78,7 +78,7 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
     return b.borrowId?.book?._id.toString() === bookId && b.returned === false;
   });
   if (!borrowedBook) {
-    return next(new ErrorHandler("You have not borrowed this book", 400));
+    return next(new ErrorHandler("User has not borrowed this book", 400));
   }
   const borrowId = borrowedBook.borrowId;
   borrowedBook.returned = true;

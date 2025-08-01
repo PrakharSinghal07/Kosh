@@ -307,28 +307,13 @@ export const getAllEmployees = catchAsyncErrors(async (req, res, next) => {
 export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const updates = req.body;
-  function expandDotNotation(obj) {
-    const result = {};
-    for (let key in obj) {
-      const value = obj[key];
-      if (value === undefined || value === null || value === "") continue
-      const keys = key.split('.');
-      let current = result;
-      for (let i = 0; i < keys.length; i++) {
-        if (i === keys.length - 1) {
-          current[keys[i]] = value;
-        } else {
-          current[keys[i]] = current[keys[i]] || {};
-          current = current[keys[i]];
-        }
-      }
-    }
-    return result;
-  }
-  const expandedUpdates = expandDotNotation(updates);
+
+  console.log(updates);
+  const expandedUpdates = updates;
   const restrictedFields = ['password', 'email', 'status', 'employeeId'];
-  const allowedFields = ['employmentType', 'joiningDate', 'manager', 'team', 'dateOfBirth', 'gender'];
-  restrictedFields.forEach(field => delete expandedUpdates[field]);
+  for (let field of restrictedFields) {
+    delete expandedUpdates[field];
+  }
   if (expandedUpdates.employmentType) {
     expandedUpdates.employmentType = expandedUpdates.employmentType;
   }
@@ -361,6 +346,11 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
     };
     expandedUpdates.avatar = avatarData;
   }
+  Object.keys(expandedUpdates).forEach((key) => {
+    if (expandedUpdates[key] === '') {
+      delete expandedUpdates[key];
+    }
+  });
 
   const updatedEmployee = await User.findByIdAndUpdate(
     id,
@@ -383,24 +373,25 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
-    data: updatedEmployee
+    data: updatedEmployee,
+    message: "Employee details updated successfully",
   });
 });
 
 export const updateEmployeeStatus = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  const { status, exitReason, exitNotes, lastWorkingDay } = req.body;
-
+  const { status, exitReason, lastWorkingDay } = req.body;
+  console.log(req.body);
   const validStatuses = ["Active", "On Leave", "Suspended", "Resigned", "Terminated"];
   if (!validStatuses.includes(status)) {
     return next(new ErrorHandler("Invalid status", 400));
   }
 
   const updateData = { status };
-
+  console.log(updateData);
   if (["Resigned", "Terminated"].includes(status)) {
     if (!lastWorkingDay) {
-      return next(new ErrorHandler("Last working day is required", 400));
+      lastWorkingDay = new Date();
     }
     updateData.lastWorkingDay = lastWorkingDay;
     updateData.exitReason = exitReason || status;

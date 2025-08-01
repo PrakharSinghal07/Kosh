@@ -100,7 +100,7 @@ const MyAssets = () => {
             </div>
           ) : (
             <div className="no-assets-message">
-              <p>You have no returned assets in your history.</p>
+              <p>User has no returned assets in their history.</p>
             </div>
           )
         )}

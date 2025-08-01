@@ -24,6 +24,7 @@ const ChartContainer = ({ title, children }) => (
 const Dashboard = () => {
   const { user, isAdmin } = useContext(AuthContext);
   const { allBooks, allUsers, borrows } = useContext(UserContext);
+  const { refreshAuthContext } = useContext(AuthContext);
   const processedData = useMemo(() => {
     const totalMembers = allUsers.length;
     const totalOverdue = borrows.filter(b => !b.returnDate && new Date(b.dueDate) < new Date()).length;
