@@ -44,7 +44,9 @@ const ChatWidget = () => {
         },
       ],
     });
-    let botReply;
+    let botReply = "";
+    let reply = "";
+    let hadError = false;
     const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
     async function main() {
@@ -52,78 +54,69 @@ const ChatWidget = () => {
         model: "gemini-2.5-flash",
         contents: converted,
       });
+
       console.log(response);
-      if(response.text.includes('intent') && response.text.includes('parameters')){
-        const jsonString = response.text;
-        const obj = JSON.parse(jsonString);
-        console.log(obj.intent);
-        console.log(obj.parameters);
-        botReply = `${obj.reply}`;
-        try{
-          const res = await axios.post(`${apiUrl}/api/v1/ai-operations`, obj, { withCredentials: true });
-          botReply = `${res.data.message}`;
-          refreshAuthContextHandler();
+
+      try {
+        if (response.text.includes("intent") && response.text.includes("parameters")) {
+          const jsonString = response.text;
+          const obj = JSON.parse(jsonString);
+
+          const items = Array.isArray(obj) ? obj : [obj];
+
+          let count = 0; // ⬅️ Move it here!
+
+          for (const item of items) {
+            console.log(item.intent, item.parameters);
+
+            try {
+              const res = await axios.post(`${apiUrl}/api/v1/ai-operations`, item, {
+                withCredentials: true,
+              });
+              botReply = res.data.message;
+              reply += `<strong>Request ${count + 1}</strong> <br /> ${botReply}<br /> <br />`;
+            } catch (err) {
+              console.log(err);
+              hadError = true;
+              reply += `<strong>Request ${count + 1}</strong> <br /> ${err.response?.data?.message || "Action failed"}<br /> <br />`;
+            }
+
+            count++;
+          }
+
+          if (!hadError) refreshAuthContextHandler();
+        } else {
+          reply = marked(response.text);
         }
-        catch(err){
-          console.log(err);
-          botReply = err.response.data.message;
-        }
-      } 
-      else{
-        botReply = marked(response.text);
+      } catch (err) {
+        console.error("LLM Response Handling Error:", err);
+        reply = "Sorry, I couldn’t process that.";
       }
     }
 
     await main();
-    
+
     setIsThinking(false);
     setMessages((prev) => [
       ...prev,
-      { sender: "model", text: botReply },
+      { sender: "model", text: reply },
     ]);
-    if(botReply.includes("Navigated to Library Dashboard")){
-      navigate("/dashboard");
-    }
-    else if(botReply.includes("Navigated to Assets Dashboard")){
-      navigate("/assets/dashboard");
-    }
-    else if(botReply.includes("Navigated to Catalog")){
-      navigate("/catalog");
-    }
-    else if(botReply.includes("Navigated to Library Users")){
-      navigate("/users");
-    }
-    else if(botReply.includes("Navigated to Asset Users")){
-      navigate("/asset/users");
-    }
-    else if(botReply.includes("Navigated to Employee Users")){
-      navigate("/employees");
-    }
-    else if(botReply.includes("Navigated to Book List")){
-      navigate("/books");
-    }
-    else if(botReply.includes("Navigated to My Assets")){
-      navigate("/my-assets");
-    }
-    else if(botReply.includes("Navigated to Assignment Logs")){
-      navigate("/assets/assignments");
-    }
-    else if(botReply.includes("Navigated to Repair Logs")){
-      navigate("/assets/repairs");
-    }
-    else if(botReply.includes("Navigated to Asset List")){
-      navigate("/assets/list");
-    }
-    else if(botReply.includes("Navigated to Employee Page")){
-      navigate("/employees");
-    }
-    else if(botReply.includes("Navigated to Employee Onboarding")){
-      navigate("/employees/onboard");
-    }
-    else if(botReply.includes("Navigated to Audit Logs")){
-      navigate("/logs");
-    }
 
+    // Navigation logic based on reply text
+    if (reply.includes("Navigated to Library Dashboard")) navigate("/dashboard");
+    else if (reply.includes("Navigated to Assets Dashboard")) navigate("/assets/dashboard");
+    else if (reply.includes("Navigated to Catalog")) navigate("/catalog");
+    else if (reply.includes("Navigated to Library Users")) navigate("/users");
+    else if (reply.includes("Navigated to Asset Users")) navigate("/asset/users");
+    else if (reply.includes("Navigated to Employee Users")) navigate("/employees");
+    else if (reply.includes("Navigated to Book List")) navigate("/books");
+    else if (reply.includes("Navigated to My Assets")) navigate("/my-assets");
+    else if (reply.includes("Navigated to Assignment Logs")) navigate("/assets/assignments");
+    else if (reply.includes("Navigated to Repair Logs")) navigate("/assets/repairs");
+    else if (reply.includes("Navigated to Asset List")) navigate("/assets/list");
+    else if (reply.includes("Navigated to Employee Page")) navigate("/employees");
+    else if (reply.includes("Navigated to Employee Onboarding")) navigate("/employees/onboard");
+    else if (reply.includes("Navigated to Audit Logs")) navigate("/logs");
 
 
   };
@@ -151,9 +144,9 @@ const ChatWidget = () => {
           ))}
           {isThinking && (
             <div className="thinking-indicator-container">
-            <div className="thinking-indicator"></div>
-            <div className="thinking-indicator"></div>
-            <div className="thinking-indicator"></div>
+              <div className="thinking-indicator"></div>
+              <div className="thinking-indicator"></div>
+              <div className="thinking-indicator"></div>
             </div>
           )}
         </div>

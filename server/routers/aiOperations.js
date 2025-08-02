@@ -90,7 +90,7 @@ router.post("/", isAuthenticated, async (req, res, next) => {
       if (result.error) {
         return res.status(404).json({ success: false, message: result.error });
       }
-      req.params.id = result.bookId;
+      req.params.id = result.bookId.toString();
       return deleteBooks(req, res, next);
 
     case "assign_book":
@@ -111,7 +111,7 @@ router.post("/", isAuthenticated, async (req, res, next) => {
       }
 
       req.body.email = result1.email;
-      req.params.id = result2.bookId;
+      req.params.id = result2.bookId.toString();
       return recordBorrowBook(req, res, next);
 
     case "return_book":
@@ -132,7 +132,7 @@ router.post("/", isAuthenticated, async (req, res, next) => {
       }
 
       req.body.email = result3.email;
-      req.params.bookId = result4.bookId;
+      req.params.bookId = result4.bookId.toString();
       return returnBook(req, res, next);
 
     case "update_book":
@@ -144,7 +144,7 @@ router.post("/", isAuthenticated, async (req, res, next) => {
       if (result5.error) {
         return res.status(404).json({ success: false, message: result5.error });
       }
-      req.params.id = result5.bookId;
+      req.params.id = result5.bookId.toString();
       req.body.updates = parameters.updates;
       return updateBooks(req, res, next);
 

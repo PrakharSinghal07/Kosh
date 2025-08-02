@@ -56,7 +56,7 @@ export const recordBorrowBook = catchAsyncErrors(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
-    message: "Borrowed book recorded successfully",
+    message: `${book.title} assigned successfully to ${user.name}`,
   });
 });
 export const returnBook = catchAsyncErrors(async (req, res, next) => {
@@ -75,7 +75,7 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
     populate: { path: "book" },
   });
   const borrowedBook = populatedUser.borrowedBooks.find((b) => {
-    return b.borrowId?.book?._id.toString() === bookId && b.returned === false;
+    return b.borrowId?.book?._id.toString() === bookId.toString() && b.returned === false;
   });
   if (!borrowedBook) {
     return next(new ErrorHandler("User has not borrowed this book", 400));
@@ -109,8 +109,8 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message:
       fine != 0
-        ? `The book has been returned successfully. The total charges including a fine are ${fine + book.price}`
-        : `The book has been returned successfully. The total charges are ${book.price}`,
+        ? `${book.title} has been returned successfully. The total charges including a fine are ${fine + book.price}`
+        : `${book.title} has been returned successfully. The total charges are ${book.price}`,
     fine,
     borrow: populatedBorrow,
   });

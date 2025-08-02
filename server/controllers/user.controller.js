@@ -374,7 +374,7 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: updatedEmployee,
-    message: "Employee details updated successfully",
+    message: `${updatedEmployee.name}'s details updated successfully`,
   });
 });
 
@@ -424,7 +424,7 @@ export const updateEmployeeStatus = catchAsyncErrors(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
-    message: `Employee status updated to ${status}`,
+    message: `${updatedEmployee.name}'s status updated to ${status}`,
     data: updatedEmployee
   });
 });

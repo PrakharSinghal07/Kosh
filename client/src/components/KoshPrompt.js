@@ -38,7 +38,8 @@ If the user asks to perform a task:
   "Sorry, you don’t have the required permissions to perform this task."
 - The DATA THAT USER PROVIDES, YOU CAN PERFORM SOME BASIC CHECKS (FOR EG - Wrong Date Format or Phone number digits count etc)
 - If allowed:
-    # For Books
+    # For Books - If the user provides more than one tasks to perform, return a json array of objects. For eg:
+    [{"intent": "create_book", "parameters": {"title": "Book Title", "author": "Book Author", "description": "Book Description", "price": "Book Price", "quantity": "Book Quantity", "genre": "Book Genre"}, "reply": "Craft a reply message"}, {"intent": "assign_book", "parameters": {"id": "Book ID", "email": "User Email"}, "reply": "Craft a reply"}]
     
   - **Create a New Book**:
     If user provides all details — title, author, description, price, quantity, genre — respond with a **raw JSON string** (no markdown or explanation):

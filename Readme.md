@@ -4,17 +4,37 @@ A comprehensive, unified platform designed to manage your enterprise’s intelle
 
 <section>
   <h2>📘 About The Project</h2>
-  <p>Most enterprises struggle with disconnected systems managing physical inventory, intellectual resources, employee data, and compliance logs, leading to silos, inefficiencies, and risks.</p>
-  <p><strong>Kosh</strong> breaks these silos by offering a <strong>single, integrated, and secure platform</strong> with:</p>
+  <p>
+    Most enterprises struggle with fragmented systems for managing physical inventory, intellectual resources, employee data, and compliance logs — leading to silos, inefficiencies, and operational risks.
+  </p>
+  <p>
+    <strong>Kosh</strong> breaks these silos by offering a <strong>single, intelligent, and secure enterprise platform</strong> that unifies operations through the following innovations:
+  </p>
   <ul>
-    <li><strong>Role-Based Access Control (RBAC):</strong> Multiple distinct user roles — Admin, Librarian, Asset Manager, HR, and Employee — each with tailored permissions enforced on both backend APIs and frontend UI. Access control is implemented using middleware functions <code>isAuthenticated</code> for authentication and <code>authorizeRole</code> for role-based authorization, ensuring strict security across the platform.</li>
-    <li><strong>Modular Enterprise Systems:</strong> Includes comprehensive modules for Library Management, Asset Management, Employee Lifecycle, and Audit Trails — all organized in a scalable MVC architecture. Users see only modules relevant to their roles, improving usability and security.</li>
-    <li><strong>Search and Filtering:</strong> Every module supports client-side search and filtering, enabling quick access to records across books, assets, and employees with smooth, responsive interactions.</li>
-    <li><strong>Secure Authentication Flow:</strong> Utilizes JWT tokens stored in HTTP-only cookies for safe and stateless user sessions. Email-based OTPs are sent when new users are added or during password reset/change workflows, enhancing account security.</li>
-    <li><strong>Rich Audit Trail:</strong> All critical actions—such as book borrowings, asset assignments, and employee updates—are logged and visible in a dedicated audit dashboard with pagination, promoting accountability and compliance.</li>
-    <li><strong>Deployment-Ready:</strong> Frontend is hosted on Netlify and backend on Render, demonstrating a real-world full-stack deployment setup.</li>
+    <li>
+      <strong>🤖 AI-Powered Conversational Assistant:</strong> Built on <em>Gemini 2.5 Flash</em>, Kosh features an in-platform, role-aware LLM assistant that enables users to perform complex operations using natural language. Whether it's “Assign Mahabharata to Mehul” or “Onboard a new employee named Riya,” the assistant securely executes backend actions based on user permissions — making enterprise workflows fast, intuitive, and conversational.
+    </li>
+    <li>
+      <strong>🔐 Role-Based Access Control (RBAC):</strong> Multiple distinct user roles — Admin, Librarian, Asset Manager, HR, and Employee — each with tightly scoped permissions enforced via middleware on both backend and frontend. This ensures robust access control and enterprise-grade security.
+    </li>
+    <li>
+      <strong>📦 Modular Enterprise Systems:</strong> Includes scalable modules for <em>Library Management</em>, <em>Asset Management</em>, <em>Employee Lifecycle</em>, and <em>Audit Trails</em> — built on clean MVC architecture. Each user sees only what’s relevant to their role, improving security and usability.
+    </li>
+    <li>
+      <strong>🔍 Intelligent Search and Filtering:</strong> Every module supports client-side search and filtering, enabling lightning-fast record lookups across books, assets, and personnel.
+    </li>
+    <li>
+      <strong>🛡️ Secure Authentication Flow:</strong> Implements JWT-based session management with HTTP-only cookies. OTP-based email verification is integrated for new user onboarding and secure password management.
+    </li>
+    <li>
+      <strong>📊 Transparent Audit Trails:</strong> All major actions — like book borrowings, asset assignments, and employee updates — are logged and accessible in a paginated audit dashboard to ensure traceability and compliance.
+    </li>
+    <li>
+      <strong>🚀 Fully Deployable:</strong> Frontend is hosted on <em>Netlify</em>, and backend on <em>Render</em>, showcasing a real-world, production-ready full-stack deployment.
+    </li>
   </ul>
 </section>
+
 
 <section>
   <h2>🚀 Live Demo</h2>
@@ -142,17 +162,18 @@ npm run dev
 </section>
 
 <section>
-  <h2>🤖 LLM-Powered Contextual Assistant (Gemini 2.5 Flash)</h2>
+  <h2>🤖 LLM-Powered Contextual Assistant <span style="font-weight: normal;">(Powered by Gemini 2.5 Flash)</span></h2>
   <ul>
-    <li><strong>Role-Aware Intelligence:</strong> The assistant dynamically tailors its responses and actions based on the user's role (Admin, HR, Librarian, Asset Manager, or Employee), ensuring all replies and operations are within authorized scope.</li>
-    <li><strong>Gemini 2.5 Flash Integration:</strong> Built on Google’s Gemini 2.5 Flash model for fast, efficient LLM-based responses with strong contextual understanding.</li>
-    <li><strong>Natural Language System Control:</strong> Users can interact with the platform using natural language prompts to perform most system operations—such as adding assets, updating employee records, managing library checkouts—directly through conversational commands.</li>
-    <li><strong>System-Prompt Controlled & Secure:</strong> Responses and actions are governed by a structured system prompt enforcing business logic and RBAC policies to prevent unauthorized access or erroneous operations.</li>
-    <li><strong>Scoped Guidance & Execution:</strong> The assistant not only guides users through feature-specific or task-related queries but can also execute the relevant backend actions based on the conversation context and user permissions.</li>
-    <li><strong>Context Persistence:</strong> Maintains conversational history to support multi-step, contextually-aware interactions enabling seamless workflows and complex command sequences.</li>
-    <li><strong>Enterprise-Grade UX:</strong> Significantly reduces support overhead and accelerates user onboarding by acting as an interactive in-platform assistant across all user roles.</li>
+    <li><strong>🔐 Role-Aware Intelligence:</strong> The assistant intelligently adapts responses and actions based on the user's role (Admin, HR, Librarian, Asset Manager, or Employee), ensuring strict RBAC compliance.</li>
+    <li><strong>⚡ Powered by Gemini 2.5 Flash:</strong> Leverages Google's Gemini 2.5 Flash for fast, reliable, and contextually rich natural language understanding.</li>
+    <li><strong>🗣️ Natural Language Commands:</strong> Perform actions like assigning assets, managing books, or updating employee data using conversational prompts — no form-filling required.</li>
+    <li><strong>🛡️ Secure & Controlled Execution:</strong> Each response is filtered through structured system prompts and permission checks, preventing unauthorized operations.</li>
+    <li><strong>🧭 Multi-Step Guidance & Automation:</strong> Supports guided workflows and can execute multiple intents in one command, such as “Assign Mahabharata to Mehul and mark him on leave.”</li>
+    <li><strong>💬 Conversational Memory:</strong> Remembers recent context to handle follow-up queries like disambiguating users or continuing multi-step tasks.</li>
+    <li><strong>🚀 Enhances User Experience:</strong> Simplifies onboarding, reduces support needs, and enables all roles to interact with the system intuitively.</li>
   </ul>
 </section>
+
 
 
 <section>

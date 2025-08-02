@@ -10,14 +10,14 @@ export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => 
   const { sno } = req.params;
   const asset = await Asset.findOne({ serialNumber: sno });
   if (!asset) {
-    return next(new ErrorHandler("Asset not found", 404));
+    return next(new ErrorHandler("Asset not found with serial number " + sno, 404));
   }
   if (!email) {
     return next(new ErrorHandler("Please enter the email", 400));
   }
   const user = await User.findOne({ email, accountVerified: true });
   if (!user) {
-    return next(new ErrorHandler("User not found", 404));
+    return next(new ErrorHandler("User not found with email " + email, 404));
   }
   if (asset.status !== "Available") {
     return next(new ErrorHandler("The asset is not available for assignement", 400));
@@ -61,7 +61,7 @@ export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => 
   });
   return res.status(200).json({
     status: "success",
-    message: "Asset successfully assigned",
+    message: "Asset - " + sno + " successfully assigned",
     data: {
       assignmentId: assignment._id,
       assetId: asset._id,
@@ -74,7 +74,7 @@ export const recordAssetReturn = catchAsyncErrors(async (req, res, next) => {
   const { sno } = req.params;
   const asset = await Asset.findOne({ serialNumber: sno });
   if (!asset) {
-    return next(new ErrorHandler("Asset not found", 404));
+    return next(new ErrorHandler("Asset not found with serial number " + sno, 404));
   }
   if (!asset.assignedTo) {
     return next(new ErrorHandler("Asset not assigned to anyone."));
@@ -118,7 +118,7 @@ export const recordAssetReturn = catchAsyncErrors(async (req, res, next) => {
   });
   return res.status(200).json({
     success: true,
-    message: "Asset successfully returned.",
+    message: "Asset - " + sno + " successfully returned.",
     data: {
       assignmentId: assignment._id,
       assetId: asset._id,
@@ -131,7 +131,7 @@ export const recordRepairAsset = catchAsyncErrors(async (req, res, next) => {
   const { sno } = req.params;
   const asset = await Asset.findOne({ serialNumber: sno });
   if (!asset) {
-    return next(new ErrorHandler("Asset not found", 404));
+    return next(new ErrorHandler("Asset not found with serial number " + sno, 404));
   }
   if (asset.status === "Under Maintenance") {
     return next(new ErrorHandler("This asset is already under maintenance", 400));
@@ -157,7 +157,7 @@ export const recordRepairAsset = catchAsyncErrors(async (req, res, next) => {
   });
   return res.status(200).json({
     status: "success",
-    message: "Asset recorded for repair",
+    message: "Asset - " + sno + " recorded for repair",
   });
 });
 export const recordAssetRepaired = catchAsyncErrors(async (req, res, next) => {
@@ -165,7 +165,7 @@ export const recordAssetRepaired = catchAsyncErrors(async (req, res, next) => {
   const { sno } = req.params;
   const asset = await Asset.findOne({ serialNumber: sno });
   if (!asset) {
-    return next(new ErrorHandler("Asset not found", 404));
+    return next(new ErrorHandler("Asset not found with serial number " + sno, 404));
   }
   if (asset.status !== "Under Maintenance") {
     return next(new ErrorHandler("Asset is not under maintenance", 400));
@@ -190,7 +190,7 @@ export const recordAssetRepaired = catchAsyncErrors(async (req, res, next) => {
   });
   return res.status(200).json({
     status: "success",
-    message: "Asset repaired successfully",
+    message: "Asset - " + sno + " repaired successfully",
   });
 });
 export const recordAssetRetired = catchAsyncErrors(async (req, res, next) => {
@@ -198,7 +198,7 @@ export const recordAssetRetired = catchAsyncErrors(async (req, res, next) => {
   const { sno } = req.params;
   const asset = await Asset.findOne({ serialNumber: sno });
   if (!asset) {
-    return next(new ErrorHandler("Asset not found", 404));
+    return next(new ErrorHandler("Asset not found with serial number " + sno, 404));
   }
   if (asset.assignedTo) {
     const user = await User.findById(asset.assignedTo);
@@ -242,7 +242,7 @@ export const recordAssetRetired = catchAsyncErrors(async (req, res, next) => {
   });
   return res.status(200).json({
     status: "success",
-    message: "Asset retired successfully.",
+    message: "Asset - " + sno + " successfully retired.",
   });
 });
 export const getMyAssignments = catchAsyncErrors(async (req, res, next) => {
@@ -254,7 +254,7 @@ export const getMyAssignments = catchAsyncErrors(async (req, res, next) => {
     .populate('assignedBy', 'name email')
     .sort({ assignedDate: -1 });
   if (!assignments) {
-    return next(new ErrorHandler("No assignments found for this user.", 404));
+    return next(new ErrorHandler("No assignments found for this user with id " + userId, 404));
   }
 
   res.status(200).json({
@@ -272,7 +272,7 @@ export const getMyReturnedAssets = catchAsyncErrors(async (req, res, next) => {
     .populate('assignedBy', 'name email')
     .sort({ actualReturnDate: -1 });
   if (!assignments) {
-    return next(new ErrorHandler("No returned assets found for this user.", 404));
+    return next(new ErrorHandler("No returned assets found for this user with id " + userId, 404));
   }
   res.status(200).json({
     success: true,
@@ -310,7 +310,7 @@ export const getUserAssignments = catchAsyncErrors(async (req, res, next) => {
       select: "name email role",
     });
   if (!assignment) {
-    return next(new ErrorHandler("No assignments data available for the user", 400));
+    return next(new ErrorHandler("No assignments data available for the user with id " + userId, 400));
   }
   return res.status(200).json({
     status: "success",
