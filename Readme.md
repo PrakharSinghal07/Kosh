@@ -40,7 +40,7 @@ A comprehensive, unified platform designed to manage your enterprise’s intelle
   <h2>🚀 Live Demo</h2>
   <ul>
     <li>Frontend (Netlify): <a href="https://kosh-erp.netlify.app" target="_blank" rel="noopener">https://kosh-erp.netlify.app</a></li>
-    <li>Backend (Render): <a href="https://library-management-system-v294.onrender.com" target="_blank" rel="noopener">https://library-management-system-v294.onrender.com</a></li>
+    <li>Backend (Render): <a href="https://kosh-u11q.onrender.com" target="_blank" rel="noopener">https://kosh-u11q.onrender.com</a></li>
   </ul>
 </section>
 

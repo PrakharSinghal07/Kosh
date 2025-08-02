@@ -99,37 +99,7 @@ const Users = () => {
       </div>
     );
   }
-  const handleGo = async () => {
-    console.log(input)
-    const prompt = `Given the following book details in natural langauge, can you generate a JSON object for it?
-    ${input}. The JSON object should have the following structure:
-    {
-      "title": "Book Title",
-      "author": "Book Author",
-      "description": "Book Description",
-      "price": "Book Price",
-      "quantity": "Book Quantity",
-      "genre": "Book Genre"
-    } Remember to return only the JSON object.`
-    async function main() {
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: [{
-          text: prompt,
-        }],
-      });
-      const jsonString = response.text
-        .replace(/```json/, '')  // remove ```json
-        .replace(/```/, '')      // remove ```
-        .trim();
-      const bookObj = JSON.parse(jsonString);
-      console.log(bookObj);
-      const bookResponse = await axios.post(`${apiUrl}/api/v1/book/admin/addBooks`, bookObj, { withCredentials: true });
-      console.log(bookResponse);
-    }
-
-    await main();
-  };
+  
   return (
     <div className="users-layout">
       <Sidebar />
@@ -181,8 +151,6 @@ const Users = () => {
                   ))}
                 </tbody>
               </table>
-              <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
-              <button onClick={handleGo}>Go</button>
             </div>
           )
         ) : (
