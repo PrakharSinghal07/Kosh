@@ -17,7 +17,7 @@ export const recordAssetAssignment = catchAsyncErrors(async (req, res, next) => 
   }
   const user = await User.findOne({ email, accountVerified: true });
   if (!user) {
-    return next(new ErrorHandler("User not found with email " + email, 404));
+    return next(new ErrorHandler("No verified user found with email " + email, 404));
   }
   if (asset.status !== "Available") {
     return next(new ErrorHandler("The asset is not available for assignement", 400));

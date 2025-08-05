@@ -63,6 +63,9 @@ export const login = catchAsyncErrors(async (req, res, next) => {
     email,
   }).select("+password");
   if (!user) return next(new ErrorHandler("Invalid email or password", 400));
+  if (user.status === "Suspended" || user.status === "Resigned" || user.status === "Terminated") {
+    return next(new ErrorHandler("Your account is currently inactive. Please contact your system administrator for assistance.", 401));
+  }
   const isPasswordMatched = await bcrypt.compare(password, user.password);
   if (!isPasswordMatched) return next(new ErrorHandler("Invalid password", 400));
   user.accountVerified = true;

@@ -20,7 +20,7 @@ const Assignments = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { refreshAuthContext } = useContext(AuthContext);
   const [assignments, setAssignments] = useState([]);
-  const [filteredAssignments, setFilteredAssignments] = useState([]);
+  const [filteredAssignments, setFilteredAssignments] = useState(assignments);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
@@ -36,7 +36,9 @@ const Assignments = () => {
     const filteredData = assignments.filter(item => {
       return (
         item?.assetId?.assetName?.toLowerCase().includes(lowercasedFilter) ||
-        item?.assetId?.serialNumber?.toLowerCase().includes(lowercasedFilter)
+        item?.assetId?.serialNumber?.toLowerCase().includes(lowercasedFilter) ||
+        item?.userId?.name?.toLowerCase().includes(lowercasedFilter) || 
+        item?.userId?.email?.toLowerCase().includes(lowercasedFilter)
       );
     });
     setFilteredAssignments(filteredData);

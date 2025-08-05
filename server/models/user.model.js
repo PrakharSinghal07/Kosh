@@ -166,6 +166,11 @@ const userSchema = new mongoose.Schema(
       default: undefined,
       select: false,
     },
+    emailVerificationToken: {
+      type: String,
+      default: undefined,
+      select: false,
+    },
     resetPasswordToken: {
       type: String,
       default: undefined,

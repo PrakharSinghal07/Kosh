@@ -12,6 +12,20 @@ export const isAuthenticated = catchAsyncErrors(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler("User is not authenticated", 400));
   }
+  if (user.status === "Suspended" || user.status === "Resigned" || user.status === "Terminated") {
+    res
+    .status(200)
+    .cookie("token", "", {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    })
+    .json({
+      success: true,
+      message: "Your account is currently inactive. Please contact your system administrator for assistance.",
+    });
+  }
   req.user = user;
   next();
 });

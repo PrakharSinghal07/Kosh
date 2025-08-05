@@ -1,4 +1,4 @@
-// ChatWidget.jsx
+
 import React, { useState, useRef, useEffect, useContext } from "react";
 import "./ChatWidget.css";
 import { GoogleGenAI } from "@google/genai";
@@ -21,7 +21,6 @@ const ChatWidget = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
     setIsThinking(true);
-    console.log(input);
     setMessages((prev) => [
       ...prev,
       { sender: "user", text: input },
@@ -34,8 +33,6 @@ const ChatWidget = () => {
       role: "user",
       parts: [{ text: input }],
     });
-    // console.log(user?.role)
-    // console.log(converted);
     converted.unshift({
       role: "model",
       parts: [
@@ -55,8 +52,6 @@ const ChatWidget = () => {
         contents: converted,
       });
 
-      console.log(response);
-
       try {
         if (response.text.includes("intent") && response.text.includes("parameters")) {
           const jsonString = response.text;
@@ -64,11 +59,9 @@ const ChatWidget = () => {
 
           const items = Array.isArray(obj) ? obj : [obj];
 
-          let count = 0; // ⬅️ Move it here!
+          let count = 0;
 
           for (const item of items) {
-            console.log(item.intent, item.parameters);
-
             try {
               const res = await axios.post(`${apiUrl}/api/v1/ai-operations`, item, {
                 withCredentials: true,
@@ -102,7 +95,6 @@ const ChatWidget = () => {
       { sender: "model", text: reply },
     ]);
 
-    // Navigation logic based on reply text
     if (reply.includes("Navigated to Library Dashboard")) navigate("/dashboard");
     else if (reply.includes("Navigated to Assets Dashboard")) navigate("/assets/dashboard");
     else if (reply.includes("Navigated to Catalog")) navigate("/catalog");

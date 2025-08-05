@@ -23,8 +23,8 @@ import {
   recordAssetReturn,
   recordRepairAsset
 } from "../controllers/assetAssignment.controller.js";
-import { updateAssetDetails } from "../controllers/asset.controller.js";
-import { updateEmployee, updateEmployeeStatus } from "../controllers/user.controller.js";
+import { createNewAsset, deleteAsset, updateAssetDetails } from "../controllers/asset.controller.js";
+import { onboardEmployee, updateEmployee, updateEmployeeStatus } from "../controllers/user.controller.js";
 import { User } from "../models/user.model.js";
 import { resolveUserEmail } from "../utils/resolveUserEmail.js";
 import { resolveBookName } from "../utils/resolveBookName.js";
@@ -64,8 +64,6 @@ const router = express.Router();
  */
 router.post("/", isAuthenticated, async (req, res, next) => {
   const { intent, parameters } = req.body;
-  let userNames;
-  // Helper function to check roles
   const checkRoles = (allowedRoles) => {
     if (!allowedRoles.includes(req.user.role)) {
       return res.status(401).json({
@@ -246,7 +244,24 @@ router.post("/", isAuthenticated, async (req, res, next) => {
       }
       req.params.sno = result13.serialNumber;
       return recordAssetRetired(req, res, next);
-
+    case "onboard_employee":
+      checkRoles(["Admin", "HR"]);
+      const result16 = await resolveUserEmail(parameters);
+      if (result16.conflict) {
+        return res.status(400).json({ success: false, message: result16.message });
+      }
+      if (result16.error) {
+        return res.status(404).json({ success: false, message: result16.error });
+      }
+      if (result16.email) {
+        const user = await User.findOne({ email: result16.email });
+        req.params.id = user._id;
+      }
+      else {
+        req.params.id = result16.id;
+      }
+      req.body = parameters;
+      return onboardEmployee(req, res, next);
     case "update_employee_status":
       checkRoles(["Admin", "HR"]);
       const result14 = await resolveUserEmail(parameters);
@@ -260,7 +275,7 @@ router.post("/", isAuthenticated, async (req, res, next) => {
         const user = await User.findOne({ email: result14.email });
         req.params.id = user._id;
       }
-      else{
+      else {
         req.params.id = result14.id;
       }
       req.body = parameters;
@@ -279,11 +294,16 @@ router.post("/", isAuthenticated, async (req, res, next) => {
         const user = await User.findOne({ email: result15.email });
         req.params.id = user._id;
       }
-      else{
+      else {
         req.params.id = result15.id;
       }
       req.body = parameters.updates;
       return updateEmployee(req, res, next);
+
+    case "create_asset":
+      checkRoles(["Admin", "Asset Manager"]);
+      req.body = parameters;
+      return createNewAsset(req, res, next);
 
     default:
       return res.status(400).json({

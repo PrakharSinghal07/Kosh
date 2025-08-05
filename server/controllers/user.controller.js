@@ -11,6 +11,7 @@ import { pipeline } from 'stream';
 import { Borrow } from "../models/borrow.model.js";
 import { Asset } from "../models/asset.model.js";
 import { logAction } from "../utils/logAction.js";
+import { assignAsset } from "../utils/assignAsset.js";
 const streamPipeline = promisify(pipeline);
 
 export const getAllUsers = catchAsyncErrors(async (req, res, next) => {
@@ -164,13 +165,14 @@ export const registerNewEmployee = catchAsyncErrors(async (req, res, next) => {
   });
 
   const token = crypto.randomBytes(32).toString("hex");
-
-  const url = `${req.protocol}://${req.get("host")}/api/v1/verify-email/${token}`;
+  employee.emailVerificationToken = token;
+  await employee.save();
+  const url = `${req.protocol}://${req.get("host")}/api/v1/user/verify-email/${token}`;
 
   await sendEmail({
     email: employee.email,
     subject: "Verify your email",
-    message: `Please login using:\n\nEmail: ${employee.email}\nPassword: ${password}\n\nPlease change your password after logging in.`,
+    message: `Please click on this link to verify your email: ${url}\n\nAfter verification, login using:\n\nEmail: ${employee.email}\nPassword: ${password}\n\nPlease change your password after logging in.`,
   });
   await logAction({
     action: 'Employee Registered',
@@ -308,7 +310,6 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const updates = req.body;
 
-  console.log(updates);
   const expandedUpdates = updates;
   const restrictedFields = ['password', 'email', 'status', 'employeeId'];
   for (let field of restrictedFields) {
@@ -371,32 +372,106 @@ export const updateEmployee = catchAsyncErrors(async (req, res, next) => {
       updatedByEmail: req.user.email
     }
   });
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: updatedEmployee,
     message: `${updatedEmployee.name}'s details updated successfully`,
   });
 });
 
+
+
+export const onboardEmployee = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  if (user.status !== "Onboarding") {
+    return next(new ErrorHandler(`${user.name} has already been onboarded`, 400));
+  }
+
+  const department = user.department;
+  const requiredAssets = {
+    IT: ["Laptop", "Monitor", "Access Card", "Headset", "Docking Station"],
+    HR: ["Laptop", "ID Card", "Access Card", "Headset"],
+    Finance: ["Laptop", "Secure USB", "Access Card", "ID Card"],
+    Security: ["Access Card", "Walkie-Talkie", "Security Uniform", "ID Card"],
+    Admin: ["Laptop", "Access Card", "Stationery Kit", "ID Card"],
+    Sales: ["Laptop", "Mobile Phone", "Access Card", "Headset"],
+    Marketing: ["Laptop", "Tablet", "Camera", "Access Card", "ID Card"],
+    Engineering: ["Laptop", "Monitor", "Access Card", "Development Board", "Headset"],
+    Operations: ["Laptop", "Access Card", "Printer Access", "ID Card"],
+    Legal: ["Laptop", "Secure USB", "ID Card", "Access Card"],
+    CustomerSupport: ["Laptop", "Headset", "Access Card", "ID Card"],
+    Facilities: ["Walkie-Talkie", "Tool Kit", "Access Card", "Safety Gear"],
+    Logistics: ["Access Card", "Barcode Scanner", "Mobile Phone", "ID Card"],
+    Procurement: ["Laptop", "Access Card", "Stationery Kit", "ID Card"]
+  };
+
+  const assets = requiredAssets[department];
+  const failedAssignments = [];
+
+  for (const category of assets) {
+    const asset = await Asset.findOne({ assetCategory: category, status: "Available" });
+    if (!asset) {
+      failedAssignments.push(category); // collect missing ones
+      continue;
+    }
+    try {
+      await assignAsset({ email: user.email, sno: asset.serialNumber, assignedBy: req.user._id });
+    } catch (err) {
+      failedAssignments.push(category);
+    }
+  }
+
+  user.status = "Active";
+  await user.save();
+
+  await logAction({
+    action: 'Employee Onboarded',
+    performedBy: req.user._id,
+    target: user._id,
+    targetModel: 'User',
+    details: {
+      onboardedByName: req.user.name,
+      onboardedByEmail: req.user.email,
+    },
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: failedAssignments.length
+      ? `Employee onboarded, but some assets could not be assigned: ${failedAssignments.join(", ")}`
+      : "Employee onboarded successfully",
+    user,
+  });
+});
+
+
 export const updateEmployeeStatus = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { status, exitReason, lastWorkingDay } = req.body;
-  console.log(id,req.body);
   const validStatuses = ["Active", "On Leave", "Suspended", "Resigned", "Terminated"];
   if (!validStatuses.includes(status)) {
     return next(new ErrorHandler("Invalid status", 400));
   }
 
   const updateData = { status };
-  console.log(updateData);
   if (["Resigned", "Terminated"].includes(status)) {
     if (!lastWorkingDay) {
       lastWorkingDay = new Date();
     }
     updateData.lastWorkingDay = lastWorkingDay;
     updateData.exitReason = exitReason || status;
+    updateData.accountVerified = false;
+    updateData.verificationCode = null;
+    updateData.verificationCodeExpired = null;
   }
-
+  if (status === "Suspended") {
+    updateData.accountVerified = false;
+  }
+  if (status === "Active") {
+    updateData.accountVerified = true;
+  }
   const updatedEmployee = await User.findByIdAndUpdate(
     id,
     { $set: updateData, $currentDate: { updatedAt: true } },
@@ -413,7 +488,7 @@ export const updateEmployeeStatus = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Employee not found", 404));
   }
   await logAction({
-    action: 'Employee Status Updated',
+    action: 'Employee Status Updated to ' + status,
     performedBy: req.user._id, 
     target: updatedEmployee._id,
     targetModel: 'User',

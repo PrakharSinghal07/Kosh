@@ -58,7 +58,7 @@ const AuditLog = () => {
                 </div>
                 <div className="log-body">
                   <span className="log-label">Target:</span>
-                  <span className="log-value log-target">{log.targetModel} #{log.target?._id || 'N/A'}</span>
+                  <span className="log-value log-target">{log?.target?.role || log?.target?.serialNumber || log?.target?.title || "N/A"} - {log?.target?.employeeId  || log?.target?.assetName || log?.target?.author || 'N/A'} ({log?.target?.name || log?.target?.assetCategory || log?.target?.genre || "N/A"})</span>
                 </div>
                 <div className="log-divider" />
               </div>

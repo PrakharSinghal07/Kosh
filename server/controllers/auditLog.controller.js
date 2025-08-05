@@ -14,7 +14,6 @@ export const getAuditLogs = catchAsyncErrors(async (req, res) => {
       .populate('performedBy', 'name email')
       .populate('target')
       .exec();
-
     res.json({ logs });
   } catch (err) {
     console.error('Failed to fetch audit logs:', err);
