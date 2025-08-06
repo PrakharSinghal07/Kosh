@@ -31,6 +31,7 @@ const EditProfile = () => {
   const [employee, setEmployee] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
   const {isAdmin, user} = useContext(AuthContext);
+  const [error, setError] = useState('');
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -69,6 +70,7 @@ const EditProfile = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching employee:', error);
+        setError('Failed to load employee details');
         toast.error('Failed to load employee details');
         navigate('/employees');
       }
@@ -126,6 +128,7 @@ const EditProfile = () => {
       navigate(`/employees/${id}`);
     } catch (error) {
       console.error('Error updating profile:', error);
+      setError(error.response?.data?.message || 'Failed to update profile');
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setSubmitting(false);
@@ -930,6 +933,7 @@ const EditProfile = () => {
                   )}
                 </Button>
               </Box>
+                  {error && <p style={{ color: 'red', textAlign: 'right', transform: 'translateX(-30px)' }}>{error}</p>}
             </Grid>
           </Grid>
         </form>

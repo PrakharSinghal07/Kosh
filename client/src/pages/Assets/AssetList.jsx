@@ -52,7 +52,8 @@ const AssetList = () => {
       const lowercasedQuery = searchQuery.toLowerCase();
       filtered = filtered.filter(asset =>
         (asset.assetName && asset.assetName.toLowerCase().includes(lowercasedQuery)) ||
-        (asset.serialNumber && asset.serialNumber.toLowerCase().includes(lowercasedQuery))
+        (asset.serialNumber && asset.serialNumber.toLowerCase().includes(lowercasedQuery)) ||
+        (asset.assetCategory && asset.assetCategory.toLowerCase().includes(lowercasedQuery))
       );
     }
     setFilteredAssets(filtered);
@@ -358,7 +359,7 @@ const AssetList = () => {
           <div className="controls">
             <input
               type="text"
-              placeholder="Search by name or serial number"
+              placeholder="Search by name, sno or category"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"

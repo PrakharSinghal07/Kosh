@@ -81,6 +81,7 @@ const EmployeeOnboarding = () => {
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -139,6 +140,7 @@ const EmployeeOnboarding = () => {
           navigate('/employees');
         } catch (error) {
           console.error('Error submitting form:', error);
+          setError(error.response?.data?.message || 'Error submitting form');
           toast.error(error.response?.data?.message || 'Error submitting form');
         } finally {
           setSubmitting(false);
@@ -151,6 +153,7 @@ const EmployeeOnboarding = () => {
   });
 
   const handleBack = () => {
+    setError('');
     setActiveStep((prevStep) => prevStep - 1);
   };
 
@@ -551,6 +554,7 @@ const EmployeeOnboarding = () => {
               {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
             </Button>
           </Box>
+            {error && <p style={{ color: 'red', textAlign: 'right', margin: '15px 0 0 0'}}>{error}</p>}
         </Box>
       </Paper>
     </Container>

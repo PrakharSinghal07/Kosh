@@ -388,6 +388,9 @@ export const onboardEmployee = catchAsyncErrors(async (req, res, next) => {
   if (user.status !== "Onboarding") {
     return next(new ErrorHandler(`${user.name} has already been onboarded`, 400));
   }
+  if(user?.accountVerified === false){
+    return next(new ErrorHandler(`${user.name} is not verified`, 400));
+  }
 
   const department = user.department;
   const requiredAssets = {
@@ -413,7 +416,7 @@ export const onboardEmployee = catchAsyncErrors(async (req, res, next) => {
   for (const category of assets) {
     const asset = await Asset.findOne({ assetCategory: category, status: "Available" });
     if (!asset) {
-      failedAssignments.push(category); // collect missing ones
+      failedAssignments.push(category); 
       continue;
     }
     try {

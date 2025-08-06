@@ -932,3 +932,7 @@
   padding-top: 0.75rem;
   margin-top: 1rem;
 }
+
+.quantity-left {
+  transform: translateX(10px);
+}

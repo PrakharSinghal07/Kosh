@@ -235,7 +235,7 @@ const Books = () => {
                   <th>Author</th>
                   <th>Genre</th>
                   <th>Price</th>
-                  {isAdmin(user, ["Admin", "Librarian"]) && <th>Quantity</th>}
+                  {isAdmin(user, ["Admin", "Librarian"]) && <th>Qt. Left</th>}
                   <th>Available</th>
                   <th>Actions</th>
                 </tr>
@@ -250,7 +250,7 @@ const Books = () => {
                     <td>{book.author}</td>
                     <td>{book.genre}</td>
                     <td>₹{book.price}</td>
-                    {isAdmin(user, ["Admin", "Librarian"]) && <td>{book.quantity} left</td>}
+                    {isAdmin(user, ["Admin", "Librarian"]) && <td className="quantity-left">{book.quantity}</td>}
                     <td>
                       <span className={`status-badge ${book.availability ? "active" : "overdue"}`}>{book.availability ? "Yes" : "No"}</span>
                     </td>
