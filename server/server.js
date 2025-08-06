@@ -16,6 +16,11 @@ import auditLogRoutes from "./routers/auditLog.router.js";
 import aiOperations from "./routers/aiOperations.js";
 import swaggerSpec from "./swagger.js";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 config();
 
 const app = express();
@@ -33,6 +38,8 @@ app.use(
     credentials: true,
   })
 );
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,7 +59,9 @@ app.get("/ping", (req, res) => {
   });
 });
 
-
+app.get('/', (req, res) => {
+  res.render('home');
+});
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/borrow", borrowRouter);

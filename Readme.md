@@ -38,11 +38,32 @@ A comprehensive, unified platform designed to manage your enterprise’s intelle
 
 <section>
   <h2>🚀 Live Demo</h2>
+
+  <h3>🧪 Demo Login Credentials (Required)</h3>
+  <p><strong>Note:</strong> The demo database resets daily at <strong>10:00 AM (server time)</strong>. Any data changes will be lost after the reset.</p>
+
   <ul>
-    <li>Frontend (Netlify): <a href="https://kosh-erp.netlify.app" target="_blank" rel="noopener">https://kosh-erp.netlify.app</a></li>
-    <li>Backend (Render): <a href="https://kosh-u11q.onrender.com" target="_blank" rel="noopener">https://kosh-u11q.onrender.com</a></li>
+    <li><strong>Email:</strong> demo.kosh@yopmail.com</li>
+    <li><strong>Password:</strong> demo@kosh</li>
+  </ul>
+
+  <h3>🌐 Access the Live Demo</h3>
+  <ul>
+    <li>
+      <strong>Frontend (Netlify):</strong>
+      <a href="https://kosh-erp.netlify.app" target="_blank" rel="noopener">
+        https://kosh-erp.netlify.app
+      </a>
+    </li>
+    <li>
+      <strong>Backend (Render):</strong>
+      <a href="https://kosh-u11q.onrender.com" target="_blank" rel="noopener">
+        https://kosh-u11q.onrender.com
+      </a>
+    </li>
   </ul>
 </section>
+
 
 <section>
   <h2>✨ Key Features</h2>
