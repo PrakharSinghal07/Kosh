@@ -58,7 +58,7 @@ A comprehensive, unified platform designed to manage your enterprise’s intelle
     <li>
       <strong>Backend (Render):</strong>
       <a href="https://kosh-u11q.onrender.com" target="_blank" rel="noopener">
-        https://kosh-u11q.onrender.com
+        https://kosh-erp.onrender.com
       </a>
     </li>
   </ul>
